@@ -10,7 +10,7 @@ public class PokerPlayer
 
 	private HandOfCards hand;
 	private DeckOfCards deck;
-	public static final int DISCARD_MAX = 3;
+	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100;
 	
 	
 	public PokerPlayer(DeckOfCards deck)
@@ -32,10 +32,10 @@ public class PokerPlayer
 		// Fill in array with -1, it would be okay to set up all values in constructor, but if we have to change the amount in the future the code will take care of it without any code refactoring	
 		Arrays.fill(discardPositions, -1);
 		
-		for (int i = 0; i < HandOfCards.HAND_CARDS && numberDiscarded <= 3; i++)
+		for (int i = 0; i < HandOfCards.SIZE && numberDiscarded <= 3; i++)
 		{
 			//System.out.print(hand.getDiscardProbability(i) + " ");
-			if (hand.getDiscardProbability(i) > 0 && hand.getDiscardProbability(i) < HandOfCards.MAX_PROBABILITY)
+			if (hand.getDiscardProbability(i) > 0 && hand.getDiscardProbability(i) < PokerPlayer.MAX_PROBABILITY)
 			{
 				// COMPUTE RANDOM NUMBER
 				if (generateRandomNumber() < hand.getDiscardProbability(i))
@@ -49,7 +49,7 @@ public class PokerPlayer
 				}
 				
 			}
-			else if (hand.getDiscardProbability(i) == HandOfCards.MAX_PROBABILITY)
+			else if (hand.getDiscardProbability(i) == PokerPlayer.MAX_PROBABILITY)
 			{
 				// DISCARD
 				if (numberDiscarded != DISCARD_MAX)
@@ -73,7 +73,7 @@ public class PokerPlayer
 	private int generateRandomNumber()
 	{
 		Random rand = new Random();
-		return rand.nextInt(HandOfCards.MAX_PROBABILITY) + 1;
+		return rand.nextInt(PokerPlayer.MAX_PROBABILITY) + 1;
 	}
 	
 	
