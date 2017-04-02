@@ -10,13 +10,17 @@ public class PokerPlayer
 
 	private HandOfCards hand;
 	private DeckOfCards deck;
-	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100;
+	private int coins;
+	private String name;
+	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, STARTING_COINS = 100;
 	
 	
-	public PokerPlayer(DeckOfCards deck)
+	public PokerPlayer(DeckOfCards deck, String playerName)
 	{
 		this.deck = deck;
 		this.hand = new HandOfCards(deck);
+		this.coins = STARTING_COINS;
+		this.name = playerName;
 	}
 	
 	/*
@@ -77,39 +81,38 @@ public class PokerPlayer
 	}
 	
 	public int getCoinsBalance() {
-		int balance = 0;
-		
-		return balance;
+		return coins;
 	}
 	
-	public String getName() {
-		String name = "BananaMan";
-		
+	public String getName() {	
 		return name;
 	}
 	
 	public boolean askFold() {
-		boolean fold = false;
-		
-		return fold;
+		if(hand.isHighHand())
+			return true;
+		else
+			return false;
 	}
 	
 	public boolean askOpenBet() {
-		boolean openBet = false;
-		
-		return openBet;
+		if(hand.isHighHand())
+			return false;
+		else
+			return true;
 	}
 	
 	public boolean askRaiseBet() {
-		boolean raise = false;
-		
-		return raise;
+		if(hand.isTwoPair() || hand.isOnePair() || hand.isHighHand())
+			return false;
+		else
+			return true;
 	}
 	
 	public boolean askDiscard() {
-		boolean fold = false;
+		boolean discard = false;
 		
-		return fold;
+		return discard;
 	}
 	
 	
@@ -119,11 +122,11 @@ public class PokerPlayer
 	public static void main(String[] args) {
 		DeckOfCards deck = new DeckOfCards();
 		deck.shuffle();
-		PokerPlayer player = new PokerPlayer(deck);
+		//PokerPlayer player = new PokerPlayer(deck);
 		//System.out.println(player.generateRandomNumber());
-		System.out.println(player.hand.toString());
-		System.out.println("\nDiscard amount: " + player.discard());
-		System.out.println(player.hand.toString());
+//		System.out.println(player.hand.toString());
+//		System.out.println("\nDiscard amount: " + player.discard());
+//		System.out.println(player.hand.toString());
 		
 
 	}

@@ -29,17 +29,17 @@ public class RoundOfPoker {
         System.out.println("New Deal:");
 
         for (PokerPlayer player : this.players)
-            System.out.println(player.getName() + " has " + player.getCoins() + " coins in the bank");
+            System.out.println(player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
             if (player.askOpenBet()) {
-                System.out.println(player.name() + " says: I can open");
+                System.out.println(player.getName() + " says: I can open");
                 canOpen = true;
             }
             else
-                System.out.println(player.name() + " says: I cannot open");
+                System.out.println(player.getName() + " says: I cannot open");
 
         // TODO CHECK IF GAME OPENED
         System.out.println("You have been dealt the following hand:");
@@ -50,8 +50,8 @@ public class RoundOfPoker {
 
     public static void main(String[] args) {
         DeckOfCards deck = new DeckOfCards();
-        PokerPlayer p1 = new PokerPlayer(deck);
-        PokerPlayer p2 = new PokerPlayer(deck);
+        PokerPlayer p1 = new PokerPlayer(deck, "Bananaman");
+        PokerPlayer p2 = new PokerPlayer(deck, "Appleboy");
         ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
 
         players.add(p1);
