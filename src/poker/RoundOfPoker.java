@@ -7,7 +7,7 @@ public class RoundOfPoker {
     private int currentBet;
     private ArrayList<PokerPlayer> players;
 
-    public RoundOfPoker(ArrayList<PokerPlayer> players)
+    public RoundOfPoker(ArrayList<PokerPlayer> players, DeckOfCards deck)
     {
         this.players = players;
         this.currentBet = 0;
@@ -15,17 +15,8 @@ public class RoundOfPoker {
 
     public void play()
     {
-        DeckOfCards deck = new DeckOfCards();
-        Scanner input = new Scanner(System.in);
 
-        System.out.println("Welcome to the Automated Poker Machine ...");
-        System.out.print("What is your name? ");
-        String name = input.nextLine();
-        System.out.println("Let's play POKER ...");
-
-        // MAKE HUMAN PLAYER, PASS A NAME
-
-        // START GAME
+        // START ROUND
         System.out.println("New Deal:");
 
         for (PokerPlayer player : this.players)
@@ -50,13 +41,23 @@ public class RoundOfPoker {
 
     public static void main(String[] args) {
         DeckOfCards deck = new DeckOfCards();
-        PokerPlayer p1 = new PokerPlayer(deck);
-        PokerPlayer p2 = new PokerPlayer(deck);
-        ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
 
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Welcome to the Automated Poker Machine ...");
+        System.out.print("What is your name? ");
+        String name = input.nextLine();
+        System.out.println("Let's play POKER ...");
+
+        // MAKE HUMAN PLAYER, PASS A NAME
+        HumanPlayer humanPlayer = new HumanPlayer(deck, name);
+        ComputerPlayer p1 = new ComputerPlayer(deck);
+        ComputerPlayer p2 = new ComputerPlayer(deck);
+        ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
+        players.add(humanPlayer);
         players.add(p1);
         players.add(p2);
-        RoundOfPoker round = new RoundOfPoker(players);
+        RoundOfPoker round = new RoundOfPoker(players, deck);
 
         //System.out.println(round.players.get(0).name);
 
