@@ -19,7 +19,7 @@ public class RoundOfPoker {
         Scanner input = new Scanner(System.in);
 
         System.out.println("Welcome to the Automated Poker Machine ...");
-        System.out.print("What is your name?");
+        System.out.print("What is your name? ");
         String name = input.nextLine();
         System.out.println("Let's play POKER ...");
 
@@ -29,29 +29,29 @@ public class RoundOfPoker {
         System.out.println("New Deal:");
 
         for (PokerPlayer player : this.players)
-            System.out.println(player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
+            System.out.println("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
             if (player.askOpenBet()) {
-                System.out.println(player.getName() + " says: I can open");
+                System.out.println("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
             else
-                System.out.println(player.getName() + " says: I cannot open");
+                System.out.println("> " + player.getName() + " says: I cannot open");
 
         // TODO CHECK IF GAME OPENED
         System.out.println("You have been dealt the following hand:");
         // PRINT THE TYPE OF HAND YOU HAVE
-        
+
 
     }
 
     public static void main(String[] args) {
         DeckOfCards deck = new DeckOfCards();
-        PokerPlayer p1 = new PokerPlayer(deck, "Bananaman");
-        PokerPlayer p2 = new PokerPlayer(deck, "Appleboy");
+        PokerPlayer p1 = new PokerPlayer(deck);
+        PokerPlayer p2 = new PokerPlayer(deck);
         ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
 
         players.add(p1);

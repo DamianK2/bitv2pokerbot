@@ -8,19 +8,18 @@ import java.util.Random;
 public class PokerPlayer
 {
 
-	private HandOfCards hand;
-	private DeckOfCards deck;
-	private int coins;
-	private String name;
+	protected HandOfCards hand;
+	protected DeckOfCards deck;
+	protected int coins;
+	protected String name;
 	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, STARTING_COINS = 100;
 	
 	
-	public PokerPlayer(DeckOfCards deck, String playerName)
+	public PokerPlayer(DeckOfCards deck)
 	{
 		this.deck = deck;
 		this.hand = new HandOfCards(deck);
 		this.coins = STARTING_COINS;
-		this.name = playerName;
 	}
 	
 	/*
@@ -74,7 +73,7 @@ public class PokerPlayer
 		return numberDiscarded;
 	}
 	
-	private int generateRandomNumber()
+	protected int generateRandomNumber()
 	{
 		Random rand = new Random();
 		return rand.nextInt(PokerPlayer.MAX_PROBABILITY) + 1;
