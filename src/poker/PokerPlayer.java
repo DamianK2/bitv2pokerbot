@@ -81,7 +81,11 @@ public class PokerPlayer
 	}
 	
 	public int getCoinsBalance() {
-		return coins;
+		return this.coins;
+	}
+	
+	public void updateCoinsBalance(int coinsAmount) {
+		this.coins += coinsAmount;
 	}
 	
 	public String getName() {	
