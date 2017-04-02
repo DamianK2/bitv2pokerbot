@@ -407,6 +407,11 @@ public class HandOfCards {
 		this.sort();
 	}
 
+	public PlayingCard getCardAt(int i)
+	{
+		return hand[i];
+	}
+
 	public static void main(String[] args) {
 		DeckOfCards deck = new DeckOfCards();
 		deck.shuffle();

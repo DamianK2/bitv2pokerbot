@@ -15,6 +15,7 @@ public class RoundOfPoker {
 
     public void play()
     {
+        Scanner input = new Scanner(System.in);
 
         // START ROUND
         System.out.println("New Deal:");
@@ -32,9 +33,19 @@ public class RoundOfPoker {
             else
                 System.out.println("> " + player.getName() + " says: I cannot open");
 
-        // TODO CHECK IF GAME OPENED
+        if (!canOpen) {
+            System.out.println("Sorry, we cannot open the game.");
+            return;
+        }
+
         System.out.println("You have been dealt the following hand:");
-        // PRINT THE TYPE OF HAND YOU HAVE
+        // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
+        System.out.println(this.players.get(0).getHand());
+
+        // DISCARD
+        System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
+        String discardCards = input.nextLine();
+
 
 
     }

@@ -117,6 +117,16 @@ public class PokerPlayer
 		
 		return discard;
 	}
+
+	public String getHand()
+	{
+		String cards = "";
+
+		for (int i = 0; i < HandOfCards.SIZE; i++)
+			cards += i + ": " + this.hand.getCardAt(i).toString() + "\n";
+
+		return cards;
+	}
 	
 	
 	/*
