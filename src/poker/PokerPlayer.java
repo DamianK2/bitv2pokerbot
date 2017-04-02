@@ -76,6 +76,42 @@ public class PokerPlayer
 		return rand.nextInt(PokerPlayer.MAX_PROBABILITY) + 1;
 	}
 	
+	public int getCoinsBalance() {
+		int balance = 0;
+		
+		return balance;
+	}
+	
+	public String getName() {
+		String name = "BananaMan";
+		
+		return name;
+	}
+	
+	public boolean askFold() {
+		boolean fold = false;
+		
+		return fold;
+	}
+	
+	public boolean askOpenBet() {
+		boolean openBet = false;
+		
+		return openBet;
+	}
+	
+	public boolean askRaiseBet() {
+		boolean raise = false;
+		
+		return raise;
+	}
+	
+	public boolean askDiscard() {
+		boolean fold = false;
+		
+		return fold;
+	}
+	
 	
 	/*
 	 * For testing purposes, generate a random hand for the player and check his behaviour.
