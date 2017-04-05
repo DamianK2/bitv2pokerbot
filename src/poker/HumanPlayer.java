@@ -24,14 +24,16 @@ public class HumanPlayer extends PokerPlayer {
     public int discard()
     {
         String discardCards = this.scanner.nextLine();
-        // !!! TEMPORARY SOLUTION
-        int card = Integer.parseInt(discardCards);
-        int[] arr = {-1, -1, -1};
-        arr[0] = card;
+        int[] cards = this.parser.convertDiscards(discardCards);
 
-        this.hand.discard(arr);
+        int counter = 0;
+        for (int element : cards)
+            if (element != -1)
+                counter++;
 
-        return 1;
+        this.hand.discard(cards);
+
+        return counter;
     }
 
 }
