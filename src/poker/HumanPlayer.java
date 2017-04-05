@@ -3,24 +3,27 @@ import java.util.Scanner;
 
 public class HumanPlayer extends PokerPlayer {
 
+    private Scanner scanner;
+    private Parser parser;
+
     public HumanPlayer(DeckOfCards deck, String name) {
         super(deck);
         this.name = name;
         this.isHuman = true;
+        this.scanner = new Scanner(System.in);
+        this.parser = new Parser();
     }
 
-    /*public boolean askFold()
+    public boolean askFold()
     {
-        Scanner input = new Scanner(System.in);
-        String inputResponse = input.nextLine();
+        String inputResponse = this.scanner.nextLine();
 
-        return parser.convertResponse(inputResponse);
-    }*/
+        return this.parser.convertResponse(inputResponse);
+    }
 
     public int discard()
     {
-        Scanner input = new Scanner(System.in);
-        String discardCards = input.nextLine();
+        String discardCards = this.scanner.nextLine();
         // !!! TEMPORARY SOLUTION
         int card = Integer.parseInt(discardCards);
         int[] arr = {-1, -1, -1};

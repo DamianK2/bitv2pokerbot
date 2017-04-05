@@ -15,7 +15,6 @@ public class RoundOfPoker {
 
     public void play()
     {
-        Scanner input = new Scanner(System.in);
 
         // START ROUND
         System.out.println("New Deal:");
@@ -59,10 +58,12 @@ public class RoundOfPoker {
                 System.out.println(player.getHand());
             }
 
+        // SHOW DISCARDING STATS
         for (PokerPlayer player : this.players)
             if (!player.isHuman())
                 System.out.println(player.getName() + " discards " + player.discard() + " card(s)");
 
+        // ASK TO FOLD
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
                 System.out.println(">> Would you like to fold (y/n)? ");
@@ -70,6 +71,19 @@ public class RoundOfPoker {
 
             player.askFold();
         }
+
+
+        // OPEN BET
+        /*int currentOpen;
+        for (PokerPlayer player : this.players)
+        {
+            if (player.askOpenBet())
+            {
+                currentOpen = 1;
+                player.updateCoinsBalance(-1);
+                System.out.println(player.getName() + " says: I open with " + currentOpen + " chip!");
+            }
+        }*/
 
 
 
