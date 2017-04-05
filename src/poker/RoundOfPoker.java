@@ -44,16 +44,32 @@ public class RoundOfPoker {
             if (player.isHuman())
                 System.out.println(player.getHand());
 
-        // DISCARD
-        /*for (PokerPlayer player : this.players) {
+        // DISCARD TODO PARSER
+        for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
                 System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
-                String discardCards = input.nextLine();
-                // !!! TEMPORARY SOLUTION
-                int card = Integer.parseInt(discardCards);
-                player.discard()
+                player.discard();
             }
-        }*/
+        }
+
+        // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
+        for (PokerPlayer player : this.players)
+            if (player.isHuman()) {
+                System.out.println("Your hand now looks like:");
+                System.out.println(player.getHand());
+            }
+
+        for (PokerPlayer player : this.players)
+            if (!player.isHuman())
+                System.out.println(player.getName() + " discards " + player.discard() + " card(s)");
+
+        for (PokerPlayer player : this.players) {
+            if (player.isHuman()) {
+                System.out.println(">> Would you like to fold (y/n)? ");
+            }
+
+            player.askFold();
+        }
 
 
 
