@@ -12,6 +12,7 @@ public class PokerPlayer
 	protected DeckOfCards deck;
 	protected int coins;
 	protected String name;
+	protected boolean isHuman;
 	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, STARTING_COINS = 100;
 	
 	
@@ -20,6 +21,11 @@ public class PokerPlayer
 		this.deck = deck;
 		this.hand = new HandOfCards(deck);
 		this.coins = STARTING_COINS;
+	}
+
+	public boolean isHuman()
+	{
+		return isHuman;
 	}
 	
 	/*

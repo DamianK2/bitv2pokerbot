@@ -6,6 +6,7 @@ public class HumanPlayer extends PokerPlayer {
     {
         super(deck);
         this.name = name;
+        this.isHuman = true;
     }
 
 }

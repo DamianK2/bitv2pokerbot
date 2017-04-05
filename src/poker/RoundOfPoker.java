@@ -40,11 +40,20 @@ public class RoundOfPoker {
 
         System.out.println("You have been dealt the following hand:");
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
-        System.out.println(this.players.get(0).getHand());
+        for (PokerPlayer player : this.players)
+            if (player.isHuman())
+                System.out.println(player.getHand());
 
         // DISCARD
-        System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
-        String discardCards = input.nextLine();
+        /*for (PokerPlayer player : this.players) {
+            if (player.isHuman()) {
+                System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
+                String discardCards = input.nextLine();
+                // !!! TEMPORARY SOLUTION
+                int card = Integer.parseInt(discardCards);
+                player.discard()
+            }
+        }*/
 
 
 

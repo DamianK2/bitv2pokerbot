@@ -8,6 +8,7 @@ public class ComputerPlayer extends PokerPlayer {
     {
         super(deck);
         this.name = this.getRandomName();
+        this.isHuman = false;
     }
 
     private String getRandomName()
