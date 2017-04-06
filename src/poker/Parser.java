@@ -6,7 +6,7 @@ import java.util.Scanner;
  * Created by Adam Freeman on 05/04/2017.
  */
 public class Parser {
-
+	
     Parser(){
 
     }
@@ -26,10 +26,19 @@ public class Parser {
         else
         	return false;
     }
-
+    
+    public boolean checkDiscards(String response) {
+    	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
+        
+    	if(strArray.length > 3)
+    		return false;
+    	else
+    		return true;
+    }
+    
     public int[] convertDiscards(String response){
         String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
-        int discard[] = new int[3];
+        int discard[] = new int[PokerPlayer.DISCARD_MAX];
 
         for (int i = 0; i < discard.length; i++){
 

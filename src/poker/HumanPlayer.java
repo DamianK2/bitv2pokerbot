@@ -16,16 +16,30 @@ public class HumanPlayer extends PokerPlayer {
 
     public int askDiscard()
     {
-        String discardCards = this.scanner.nextLine();
+    	int counter = 0;
+    	boolean check = false;
+    	String discardCards;
+        
+    	do {
+        	discardCards = this.scanner.nextLine();
+        	
+        	if(!this.parser.checkDiscards(discardCards)) {
+        		System.out.println("You can only discard a maximum of 3 cards.");
+                System.out.println("Please type in the cards you would like to discard again.");	
+        	}
+        	else
+        		check = true;	
+        	
+        } while(!check);
+        		
         int[] cards = this.parser.convertDiscards(discardCards);
        
-        int counter = 0;
         for (int element : cards)
             if (element != -1)
                 counter++;
 
-        this.hand.discard(cards);
-
+        this.hand.discard(cards);      
+        
         return counter;
     }
     
