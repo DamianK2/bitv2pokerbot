@@ -11,29 +11,40 @@ public class Parser {
 
     }
 
-    public boolean convertResponse(String response){
+    public int convertResponse(String response){
         String checkYes = "Yes";
         String checkY = "Y";
         String checkNo =  "No";
         String checkN = "N";
 
         if(checkYes.equalsIgnoreCase(response) || checkY.equalsIgnoreCase(response) ){
-            return  true;
+            return  1;
         }
         else if(checkNo.equalsIgnoreCase(response) || checkN.equalsIgnoreCase(response)){
-            return false;
+            return 0;
         }
         else
-        	return false;
+        	return -1;
     }
     
-    public boolean checkDiscards(String response) {
+    public boolean checkAmountDiscards(String response) {
     	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
         
     	if(strArray.length > 3)
     		return false;
-    	else
+    	else 
     		return true;
+    }
+    
+    public boolean checkDiscardNumbers(String response) {
+    	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
+    	
+    	for(int i = 0; i < strArray.length; i++) {
+			if(Integer.parseInt(strArray[i]) < 0 || Integer.parseInt(strArray[i]) > 4)
+				return false;
+		}
+    	
+    	return true;
     }
     
     public int[] convertDiscards(String response){

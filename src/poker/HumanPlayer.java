@@ -23,9 +23,12 @@ public class HumanPlayer extends PokerPlayer {
     	do {
         	discardCards = this.scanner.nextLine();
         	
-        	if(!this.parser.checkDiscards(discardCards)) {
+        	if(!this.parser.checkAmountDiscards(discardCards)) {
         		System.out.println("You can only discard a maximum of 3 cards.");
                 System.out.println("Please type in the cards you would like to discard again.");	
+        	}
+        	else if(!this.parser.checkDiscardNumbers(discardCards)) {
+        		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
         	}
         	else
         		check = true;	
@@ -56,9 +59,24 @@ public class HumanPlayer extends PokerPlayer {
 	}
     
     public boolean getResponse() {
-    	String inputResponse = this.scanner.nextLine();
-
-        return this.parser.convertResponse(inputResponse);
+    	boolean check = false;
+    	int response = -2;
+    	
+    	do {
+    		String inputResponse = this.scanner.nextLine();
+    		response = this.parser.convertResponse(inputResponse);
+    		if(response == -1) {
+    			System.out.println("The acceptable answers are yes/no or y/n. Please try again");
+    		}
+    		else
+    			check = true;
+    		
+    	} while(!check);
+    	
+    	if(response == 1) 
+    		return true;
+    	else
+    		return false;
     }
 
 }
