@@ -21,9 +21,10 @@ public class Parser {
             return  true;
         }
         else if(checkNo.equalsIgnoreCase(response) || checkN.equalsIgnoreCase(response)){
-            return true;
+            return false;
         }
-        return false;
+        else
+        	return false;
     }
 
     public int[] convertDiscards(String response){

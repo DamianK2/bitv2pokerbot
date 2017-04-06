@@ -47,7 +47,7 @@ public class RoundOfPoker {
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
                 System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
-                player.discard();
+                player.askDiscard();
             }
         }
 

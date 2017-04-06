@@ -14,18 +14,11 @@ public class HumanPlayer extends PokerPlayer {
         this.parser = new Parser();
     }
 
-    public boolean askFold()
-    {
-        String inputResponse = this.scanner.nextLine();
-
-        return this.parser.convertResponse(inputResponse);
-    }
-
-    public int discard()
+    public int askDiscard()
     {
         String discardCards = this.scanner.nextLine();
         int[] cards = this.parser.convertDiscards(discardCards);
-
+       
         int counter = 0;
         for (int element : cards)
             if (element != -1)
@@ -34,6 +27,24 @@ public class HumanPlayer extends PokerPlayer {
         this.hand.discard(cards);
 
         return counter;
+    }
+    
+    public boolean askFold() {
+    	return this.getResponse();
+    }
+ 
+    public boolean askOpenBet() {
+    	return this.getResponse();
+	}
+    
+    public boolean askRaiseBet() {
+    	return this.getResponse();
+	}
+    
+    public boolean getResponse() {
+    	String inputResponse = this.scanner.nextLine();
+
+        return this.parser.convertResponse(inputResponse);
     }
 
 }

@@ -119,8 +119,8 @@ public class PokerPlayer
 			return true;
 	}
 	
-	public boolean askDiscard() {
-		boolean discard = false;
+	public int askDiscard() {
+		int discard = -1;
 		
 		return discard;
 	}
