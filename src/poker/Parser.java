@@ -40,7 +40,9 @@ public class Parser {
     	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
     	
     	for(int i = 0; i < strArray.length; i++) {
-			if(Integer.parseInt(strArray[i]) < 0 || Integer.parseInt(strArray[i]) > 4)
+    		if(strArray[i].length() > 1)
+    			return false;
+    		else if(strArray[i].charAt(0) <= 48 || strArray[i].charAt(0) >= 57)
 				return false;
 		}
     	
