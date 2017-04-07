@@ -25,7 +25,7 @@ public class RoundOfPoker {
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
-            if (player.askOpenBet()) {
+            if (player.canOpenBet()) {
                 System.out.println("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
