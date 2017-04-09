@@ -11,17 +11,18 @@ public class PokerPlayer
 
 	protected HandOfCards hand;
 	protected DeckOfCards deck;
-	protected int coins;
+	protected int coins, coinsOnTable;
 	protected String name;
 	protected boolean isHuman;
-	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, STARTING_COINS = 100;
+	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, PLAYER_STARTING_COINS = 10, TABLE_STARTING_COINS = 0;
 	
 	
 	public PokerPlayer(DeckOfCards deck)
 	{
 		this.deck = deck;
 		this.hand = new HandOfCards(deck);
-		this.coins = STARTING_COINS;
+		this.coins = PLAYER_STARTING_COINS;
+		this.coinsOnTable = TABLE_STARTING_COINS;
 	}
 
 	public boolean isHuman()
@@ -130,6 +131,10 @@ public class PokerPlayer
 		int discard = -1;
 		
 		return discard;
+	}
+	
+	public void updateTableCoins(int coinsAmount) {
+		this.coinsOnTable += coinsAmount;
 	}
 
 	public String getHand()
