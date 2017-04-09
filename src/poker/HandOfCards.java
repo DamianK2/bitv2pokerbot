@@ -266,6 +266,12 @@ public class HandOfCards {
 		}
 		return sum;
 	}
+	
+	/*We got the odds for different probabilities of outcomes after discarding a card improving a hand the user currently holds from 'https://rip94550.wordpress.com/2011/03/21/draw-poker-%E2%80%93-improving-the-hand/'
+	 * We converted the odds to percentage using this website: 'http://www.calculatorsoup.com/calculators/games/odds.php'
+	 * For some methods By default discardProbability is zero. In some methods value returned is 100 as for example in high hand if no 4 flush or broken
+	 * straight are there, discarding the weakest card is best option.*/
+	
 
 	public int getDiscardProbability(int cardPosition) {
 		discardProbability = 0;							// 0 by default
@@ -279,34 +285,34 @@ public class HandOfCards {
 			}
 			else if(this.isBrokenStraight()){
 				if(this.isBrokenCardStraight(cardPosition))
-					discardProbability = 18;
+					discardProbability = 19;
 			}
 			else if(this.isThreeOfAKind()) {
 				// this allows us to improve to a four of a kind or a full house
 				if(!this.checkForThreeCards(cardPosition))
-					discardProbability = 90;				// high probability due to the card not being in the three of a kind
+					discardProbability = 10;				// high probability due to the card not being in the three of a kind
 			}
 			else if(this.isTwoPair()) {
 				// this allows us to improve to a full house
 				if(!this.checkForPair(cardPosition))
-					discardProbability = 60;				// moderate probability due to the card not being in two pair
+					discardProbability = 9;				// moderate probability due to the card not being in two pair
 			}
 			else if(this.isOnePair()) {
 				if(!this.checkForPair(cardPosition))
-					discardProbability = 90;				// high probability because we can get a three of a kind if we discard 1 card, which will bring us to the three of a kind probability calculator
+					discardProbability = 29;				// high probability because we can get a three of a kind if we discard 1 card, which will bring us to the three of a kind probability calculator
 			}
 			else if(this.isHighHand()) {
 				// the last card is always the worst so it is a definite discard, lowers down with the card number
 				if(cardPosition == 4)
 					discardProbability = 100;
 				else if(cardPosition == 3)
-					discardProbability = 80;
+					discardProbability = 0;
 				else if(cardPosition == 2)
-					discardProbability = 50;
+					discardProbability = 0;
 				else if(cardPosition == 1)
-					discardProbability = 25;
+					discardProbability = 0;
 				else if(cardPosition == 0)
-					discardProbability = 10;
+					discardProbability = 0;
 			}
 		}
 		return discardProbability;
