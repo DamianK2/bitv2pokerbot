@@ -1,4 +1,5 @@
 package poker;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -30,6 +31,57 @@ public class ComputerPlayer extends PokerPlayer {
     	Random rand = new Random();
     	int number = rand.nextInt(range);
     	return number;
+    }
+    
+    public int discard()
+	{
+		int numberDiscarded = 0, arrayPosition = 0;
+		int[] discardPositions = new int[DISCARD_MAX];
+		
+		// Fill in array with -1, it would be okay to set up all values in constructor, but if we have to change the amount in the future the code will take care of it without any code refactoring	
+		Arrays.fill(discardPositions, -1);
+		
+		for (int i = 0; i < HandOfCards.SIZE && numberDiscarded <= 3; i++)
+		{
+			//System.out.print(hand.getDiscardProbability(i) + " ");
+			if (hand.getDiscardProbability(i) > 0 && hand.getDiscardProbability(i) < PokerPlayer.MAX_PROBABILITY)
+			{
+				// COMPUTE RANDOM NUMBER
+				if (this.checkBotDiscard(hand.getDiscardProbability(i)))
+				{
+					// DISCARD
+					if (numberDiscarded != DISCARD_MAX)
+					{
+						discardPositions[arrayPosition++] = i;
+						numberDiscarded++;
+					}
+				}
+				
+			}
+			else if (hand.getDiscardProbability(i) == PokerPlayer.MAX_PROBABILITY)
+			{
+				// DISCARD
+				if (numberDiscarded != DISCARD_MAX)
+				{
+					discardPositions[arrayPosition++] = i;
+					numberDiscarded++;
+				}
+			}
+		}
+		
+		this.hand.discard(discardPositions);
+		
+
+		/*System.out.println("\nPositions:");
+		for (int i : discardPositions)
+			System.out.println(" " + i + " ");*/
+		
+		return numberDiscarded;
+	}
+    
+    private boolean checkBotDiscard(int discardProbabilty) {
+    	// TO DO check behaviour and return value based on it
+    	return false;
     }
 
     public static void main(String[] args) {
