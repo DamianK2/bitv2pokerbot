@@ -6,7 +6,7 @@ import java.util.Random;
 public class ComputerPlayer extends PokerPlayer {
 
 	private String behaviourType;
-	private static final int NO_OF_NAMES = 20, NO_OF_BEHAVIOURS = 3;
+	private static final int NO_OF_NAMES = 20, NO_OF_BEHAVIOURS = 3, RISKY_MIN_PROBABILITY = 10, NORMAL_MIN_PROBABILITY = 50, SAFE_MIN_PROBABILITY = 80;
 	
 	public ComputerPlayer(DeckOfCards deck) {
         super(deck);
@@ -23,7 +23,7 @@ public class ComputerPlayer extends PokerPlayer {
     
     private String getRandomBehaviour() {
     	int position = this.generateRandomNumber(ComputerPlayer.NO_OF_BEHAVIOURS);
-    	String [] behaviours = {"risky", "normal", "no risk"};
+    	String [] behaviours = {"safe", "normal", "risky"};
     	return behaviours[position];
     }
     
@@ -47,7 +47,7 @@ public class ComputerPlayer extends PokerPlayer {
 			if (hand.getDiscardProbability(i) > 0 && hand.getDiscardProbability(i) < PokerPlayer.MAX_PROBABILITY)
 			{
 				// COMPUTE RANDOM NUMBER
-				if (this.checkBotDiscard(hand.getDiscardProbability(i)))
+				if (this.checkBotDiscard() < hand.getDiscardProbability(i))
 				{
 					// DISCARD
 					if (numberDiscarded != DISCARD_MAX)
@@ -79,22 +79,48 @@ public class ComputerPlayer extends PokerPlayer {
 		return numberDiscarded;
 	}
     
-    private boolean checkBotDiscard(int discardProbabilty) {
-    	// TO DO check behaviour and return value based on it
-    	return false;
+    private int checkBotDiscard() {
+    	Random rand = new Random();
+    	int probability = 0;
+    	
+    	if(this.behaviourType == "safe") 
+    		probability = rand.nextInt(PokerPlayer.MAX_PROBABILITY - ComputerPlayer.SAFE_MIN_PROBABILITY + 1) + ComputerPlayer.SAFE_MIN_PROBABILITY;
+    	else if(this.behaviourType == "normal")
+    		probability = rand.nextInt(PokerPlayer.MAX_PROBABILITY - ComputerPlayer.NORMAL_MIN_PROBABILITY + 1) + ComputerPlayer.NORMAL_MIN_PROBABILITY;
+    	else if(this.behaviourType == "risky")
+    		probability = rand.nextInt(PokerPlayer.MAX_PROBABILITY - ComputerPlayer.RISKY_MIN_PROBABILITY + 1) + ComputerPlayer.RISKY_MIN_PROBABILITY;
+    	
+    	return probability;
     }
 
     public static void main(String[] args) {
         DeckOfCards deck = new DeckOfCards();
         ComputerPlayer p1 = new ComputerPlayer(deck);
         System.out.println(p1.getName());
-        if(p1.behaviourType == "risky") 
+        
+        if(p1.behaviourType == "risky") {
         	System.out.println("risky");
-        else if(p1.behaviourType == "normal")
+        	System.out.println("Probabilty returned for risky: " + p1.checkBotDiscard());
+        	System.out.println(p1.hand.toString());
+        	p1.discard();
+        	System.out.println(p1.hand.toString());
+        }	
+        else if(p1.behaviourType == "normal") {
         	System.out.println("normal");
-        else if(p1.behaviourType == "no risk") {
-        	System.out.println("not risky");
+        	System.out.println("Probabilty returned for normal: " + p1.checkBotDiscard());
+        	System.out.println(p1.hand.toString());
+        	p1.discard();
+        	System.out.println(p1.hand.toString());
+        }	
+        else if(p1.behaviourType == "safe") {
+        	System.out.println("safe");
+        	System.out.println("Probabilty returned for safe: " + p1.checkBotDiscard());
+        	System.out.println(p1.hand.toString());
+        	p1.discard();
+        	System.out.println(p1.hand.toString());
         }
+        
+        
         
     }
 }
