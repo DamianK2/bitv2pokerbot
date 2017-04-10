@@ -44,7 +44,7 @@ public class RoundOfPoker {
             if (player.isHuman())
                 System.out.println(player.getHand());
 
-        // DISCARD TODO PARSER
+        // DISCARD
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
                 System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
@@ -87,9 +87,7 @@ public class RoundOfPoker {
             if (players.get(i).isHuman() && !fold[counter])
                 System.out.println("Would you like to open bet (y/n)? ");
 
-            if (!fold[counter] && players.get(i).askOpenBet(this.currentBet))
-            {
-
+            if (!fold[counter] && players.get(i).askOpenBet(this.currentBet)) {
 
                 this.currentBet = 1;
                 players.get(i).updateCoinsBalance(-this.currentBet);
@@ -105,6 +103,8 @@ public class RoundOfPoker {
             System.out.println("sorry, the betting was not opened.");
             return;
         }
+
+        // TODO "I SEE THAT CHIP", MORE BETTING
 
 
 
