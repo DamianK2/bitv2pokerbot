@@ -84,14 +84,16 @@ public class RoundOfPoker {
         boolean isBettingOpen = false;
         for (int i = 0; i < this.players.size() && !isBettingOpen; i++)
         {
-            if (players.get(i).isHuman())
+            if (players.get(i).isHuman() && !fold[counter])
                 System.out.println("Would you like to open bet (y/n)? ");
 
             if (!fold[counter] && players.get(i).askOpenBet(this.currentBet))
             {
-                currentOpen = 1;
-                players.get(i).updateCoinsBalance(-currentOpen);
-                System.out.println(players.get(i).getName() + " says: I open with " + currentOpen + " chip!");
+
+
+                this.currentBet = 1;
+                players.get(i).updateCoinsBalance(-this.currentBet);
+                System.out.println(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
                 isBettingOpen = true;
             }
 
@@ -99,8 +101,10 @@ public class RoundOfPoker {
         }
 
         // IF NOBODY OPENED
-        if (!isBettingOpen)
+        if (!isBettingOpen) {
+            System.out.println("sorry, the betting was not opened.");
             return;
+        }
 
 
 
