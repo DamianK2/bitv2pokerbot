@@ -9,7 +9,8 @@ package poker;
 public class HandOfCards {
 	// create a constant to use in loops and creating array
 	public static final int SIZE = 5;
-	private static final int LOOP_TWICE = 2, LOOP_THRICE = 3, LOOP_FOUR_TIMES = 4, LOOP_FIVE_TIMES = 5, ROYAL_FLUSH_DEFAULT = 900000000, STRAIGHT_FLUSH_DEFAULT = 800000000, FOUR_OF_KIND_DEFAULT = 700000000, FULL_HOUSE_DEFAULT = 600000000, FLUSH_DEFAULT = 500000000, STRAIGHT_DEFAULT = 400000000, THREE_OF_KIND_DEFAULT = 300000000, TWO_PAIR_DEFAULT = 200000000, ONE_PAIR_DEFAULT = 100000000, HIGH_HAND_DEFAULT = 10000000;
+	private static final int LOOP_TWICE = 2, LOOP_THRICE = 3, LOOP_FOUR_TIMES = 4, LOOP_FIVE_TIMES = 5;
+	public static final int ROYAL_FLUSH_DEFAULT = 900000000, STRAIGHT_FLUSH_DEFAULT = 800000000, FOUR_OF_KIND_DEFAULT = 700000000, FULL_HOUSE_DEFAULT = 600000000, FLUSH_DEFAULT = 500000000, STRAIGHT_DEFAULT = 400000000, THREE_OF_KIND_DEFAULT = 300000000, TWO_PAIR_DEFAULT = 200000000, ONE_PAIR_DEFAULT = 100000000, HIGH_HAND_DEFAULT = 10000000;
 	private PlayingCard hand[] = new PlayingCard[SIZE];	// create player's hand
 	private DeckOfCards deck;							// could be used later for a reference to the deck object we created
 	private int discardProbability, brokenCardPos;

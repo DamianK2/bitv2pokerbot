@@ -99,21 +99,21 @@ public class PokerPlayer
 		return name;
 	}
 	
-	public boolean canOpenBet() {
+	public boolean canOpenBet(int currentBet) {
 		if(hand.isHighHand())
 			return false;
 		else
 			return true;
 	}
 	
-	public boolean askFold() {
+	public boolean askFold(int currentBet) {
 		if(hand.isHighHand())
 			return true;
 		else
 			return false;
 	}
 	
-	public boolean askOpenBet() {
+	public boolean askOpenBet(int currentBet) {
 		if(hand.isHighHand())
 			return false;
 		else

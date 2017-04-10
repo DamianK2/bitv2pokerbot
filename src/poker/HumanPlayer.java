@@ -46,15 +46,15 @@ public class HumanPlayer extends PokerPlayer {
         return counter;
     }
     
-    public boolean askFold() {
+    public boolean askFold(int currentBet) {
     	return this.getResponse();
     }
  
-    public boolean askOpenBet() {
+    public boolean askOpenBet(int currentBet) {
     	return this.getResponse();
 	}
     
-    public boolean askRaiseBet() {
+    public boolean askRaiseBet(int currentBet) {
     	return this.getResponse();
 	}
     

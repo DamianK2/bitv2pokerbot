@@ -25,7 +25,7 @@ public class RoundOfPoker {
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
-            if (player.canOpenBet()) {
+            if (player.canOpenBet(currentBet)) {
                 System.out.println("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
@@ -69,8 +69,9 @@ public class RoundOfPoker {
                 System.out.println(">> Would you like to fold (y/n)? ");
             }
 
-            player.askFold();
+            player.askFold(currentBet);
         }
+        
 
 
         // OPEN BET
@@ -88,6 +89,7 @@ public class RoundOfPoker {
 
 
     }
+    
 
     public static void main(String[] args) {
         DeckOfCards deck = new DeckOfCards();
