@@ -18,6 +18,7 @@ public class RoundOfPoker {
 
         // START ROUND
         System.out.println("New Deal:");
+        int counter; // Used for iterations
 
         for (PokerPlayer player : this.players)
             System.out.println("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
@@ -25,7 +26,7 @@ public class RoundOfPoker {
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
-            if (player.canOpenBet(currentBet)) {
+            if (player.canOpenBet()) {
                 System.out.println("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
@@ -64,32 +65,40 @@ public class RoundOfPoker {
                 System.out.println(player.getName() + " discards " + player.discard() + " card(s)");
 
         // ASK TO FOLD
+        boolean[] fold = new boolean[this.players.size()];
+        counter = 0;
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
                 System.out.println(">> Would you like to fold (y/n)? ");
             }
 
-            player.askFold(currentBet);
+            fold[counter] = player.askFold(this.currentBet);
+            counter++;
         }
-        
 
 
         // OPEN BET
-        /*int currentOpen;
+        int currentOpen;
+        boolean[] seen = new boolean[this.players.size()];
+        counter = 0;
         for (PokerPlayer player : this.players)
         {
-            if (player.askOpenBet())
+            if (player.isHuman())
+                System.out.println("Would you like to open bet (y/n)? ");
+
+            if (!fold[counter] && player.askOpenBet(this.currentBet))
             {
                 currentOpen = 1;
-                player.updateCoinsBalance(-1);
+                player.updateCoinsBalance(-currentOpen);
                 System.out.println(player.getName() + " says: I open with " + currentOpen + " chip!");
             }
-        }*/
+
+            counter++;
+        }
 
 
 
     }
-    
 
     public static void main(String[] args) {
         DeckOfCards deck = new DeckOfCards();
@@ -117,3 +126,4 @@ public class RoundOfPoker {
 
     }
 }
+
