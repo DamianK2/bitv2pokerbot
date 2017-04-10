@@ -81,20 +81,26 @@ public class RoundOfPoker {
         int currentOpen;
         boolean[] seen = new boolean[this.players.size()];
         counter = 0;
-        for (PokerPlayer player : this.players)
+        boolean isBettingOpen = false;
+        for (int i = 0; i < this.players.size() && !isBettingOpen; i++)
         {
-            if (player.isHuman())
+            if (players.get(i).isHuman())
                 System.out.println("Would you like to open bet (y/n)? ");
 
-            if (!fold[counter] && player.askOpenBet(this.currentBet))
+            if (!fold[counter] && players.get(i).askOpenBet(this.currentBet))
             {
                 currentOpen = 1;
-                player.updateCoinsBalance(-currentOpen);
-                System.out.println(player.getName() + " says: I open with " + currentOpen + " chip!");
+                players.get(i).updateCoinsBalance(-currentOpen);
+                System.out.println(players.get(i).getName() + " says: I open with " + currentOpen + " chip!");
+                isBettingOpen = true;
             }
 
             counter++;
         }
+
+        // IF NOBODY OPENED
+        if (!isBettingOpen)
+            return;
 
 
 
