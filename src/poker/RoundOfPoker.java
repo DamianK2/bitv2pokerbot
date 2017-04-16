@@ -123,15 +123,13 @@ public class RoundOfPoker {
                     }
                     // CHECK IF THE PLAYERS HAS ALREADY OPEN
                     else if (checkOpen > 0 ) {
-                        if(checkRound == 0) {
-                            printSeenStatement(size, i);
-                        }
-                        size = i;
 
                         // CHECK IF THE PLAYER IS A HUMAN AND ASK THE PLAYER TO RAISE THE BET
                         if (players.get(i).isHuman() && !fold[i]) {
-                            if(firstOpen && players.get(0).isHuman)
-                                printSeenStatement(size, i);
+                            if(checkFold(fold) == 1)
+                                break;;
+
+                            printSeenStatement(size, i);
 
                             System.out.println("Would you like to raise (y/n)? ");
                             boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
@@ -140,13 +138,8 @@ public class RoundOfPoker {
                             if (checkHuman) {
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
-                                if(checkRound == 0)
-                                    printRaiseStatement(this.currentBet, i);
-                                else {
-                                    printSeenStatement(size, i);
-                                    printRaiseStatement(this.currentBet, i);
-                                }
-
+                                printRaiseStatement(i);
+                                size = i;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkHuman ) {
@@ -163,13 +156,12 @@ public class RoundOfPoker {
                             if (checkComputer ) {
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
-                                if(checkRound == 0)
-                                    printRaiseStatement(this.currentBet, i);
-                                else {
-                                    printSeenStatement(size, i);
-                                    printRaiseStatement(this.currentBet, i);
-                                }
+                                if(checkFold(fold) == 1)
+                                    break;
 
+                                printSeenStatement(size, i);
+                                printRaiseStatement(i);
+                                size = i;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkComputer) {
@@ -187,18 +179,13 @@ public class RoundOfPoker {
             checkRound = 1;
             roundCounter++;
 
-            // CHECK THE NUMBER OF PLAYER STILL IN THE GAME
-            for(int k = 0; k < players.size(); k++){
-                if(!fold[k]){
-                    checkActivePlayer++;
-                }
-            }
+
             // CHECK IF THE GAME ROUND OF POKER IS FINNISH
             if(roundCounter == 2){
                 round = false;
             }
             //CHECK IF THER'S ONLY ONE PLAYER LEFT IN THE GAME
-            else if(checkActivePlayer == 1){
+            else if(checkFold(fold) == 1){
                 round = false;
             }
 
@@ -267,8 +254,19 @@ public class RoundOfPoker {
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
-    public void printRaiseStatement(int currentBet, int i){
-        System.out.println(players.get(i).getName() + " says: I raise " + currentBet + " chip!");
+    public void printRaiseStatement(int i){
+        System.out.println(players.get(i).getName() + " says: I raise " + players.get(i).pot() + " chip!");
+    }
+
+    // CHECK THE NUMBER OF PLAYER STILL IN THE GAME
+    public int checkFold(boolean fold[]){
+        int checkActivePlayer = 0;
+        for(int k = 0; k < players.size(); k++){
+            if(!fold[k]){
+                checkActivePlayer++;
+            }
+        }
+        return  checkActivePlayer;
     }
 
 
