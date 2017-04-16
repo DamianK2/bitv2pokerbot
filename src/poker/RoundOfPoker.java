@@ -217,14 +217,14 @@ public class RoundOfPoker {
     // A METHOD THAT CHECKS WHICH PLAYER IS THE WINNER AND DISPLAY PLAYERS HAND
     public void winner(boolean fold[]){
         // CHECK FOR WINNER
-        int winnerPosition = 0, cardGameValue = 0;
+        int winnerPos = 0, cardGameValue = 0;
         for(int i = 0; i < players.size(); i++){
             if(i ==  0 ) {
                 System.out.println(players.get(i).getName() + " goes first");
                 System.out.println(players.get(i).getHand());
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]) {
                     cardGameValue = players.get(i).getHandValue();
-                    winnerPosition = i;
+                    winnerPos = i;
                 }
             }
             else{
@@ -232,7 +232,7 @@ public class RoundOfPoker {
                     System.out.println(players.get(i).getName() + " says 'read them and weep'");
                     System.out.println(players.get(i).getHand());
                     cardGameValue = players.get(i).getHandValue();
-                    winnerPosition = i;
+                    winnerPos = i;
                 }
                 else{
                     System.out.println(players.get(i).getName() + " says 'read them and weep'");
@@ -245,10 +245,11 @@ public class RoundOfPoker {
         // PRINT WINNER
         int winnings = currentTableBetAmount();
         if(winnings > 0) {
-            System.out.println(players.get(winnerPosition).getName() + " say: I WIN  " + winnings + " chip");
-            System.out.println(players.get(winnerPosition).getHand());
-            System.out.println(players.get(winnerPosition).getName() + " has " + (winnings +
-                    players.get(winnerPosition).getCoinsBalance()) + " chip(s) in the bank");
+            System.out.println(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
+            System.out.println(players.get(winnerPos).getHand());
+            players.get(winnerPos).updateCoinsBalance(winnings);
+            System.out.println(players.get(winnerPos).getName() + " has " +
+                    players.get(winnerPos).getCoinsBalance() + " chip(s) in the bank");
         }
         else
             System.out.println("No winner because none of the players can open the bet");
@@ -282,8 +283,8 @@ public class RoundOfPoker {
         ComputerPlayer p3 = new ComputerPlayer(deck);
         ComputerPlayer p4 = new ComputerPlayer(deck);
         ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
-        players.add(humanPlayer);
         players.add(p1);
+        players.add(humanPlayer);
         players.add(p2);
         players.add(p3);
         players.add(p4);
