@@ -86,7 +86,7 @@ public class RoundOfPoker {
 
         // BETTING
         int checkOpen = 0, bettingRound = 0, checkActivePlayer = 0, roundCounter = 0, size = 0, checkRound = 0;
-        boolean round = true, openingBetting = true, human = true;
+        boolean round = true, openingBetting = true, human = true, firstOpen = false;
 
         while (round) {
             for (int i = 0; i < this.players.size(); i++) {
@@ -99,7 +99,7 @@ public class RoundOfPoker {
                             // CHECK IF THE HUMAN PLAYER IS THE FIRST PLAYER TO OPEN
                             if (players.get(i).isHuman() && !fold[i] && human && checkOpen == 0) {
                                 System.out.println("Would you like to open bet (y/n)? ");
-                                players.get(i).askOpenBet(this.currentBet);
+                               firstOpen = players.get(i).askOpenBet(this.currentBet);
                                 this.currentBet = 1;
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
@@ -108,7 +108,7 @@ public class RoundOfPoker {
                         }
                         // CHECK IF THE COMPUTER PLAYER IS THE FIRST PLAYER TO OPEN
                         else if(!players.get(i).isHuman()){
-                            players.get(i).askOpenBet(this.currentBet);
+                            firstOpen = players.get(i).askOpenBet(this.currentBet);
                             this.currentBet = 1;
                             players.get(i).updateCoinsBalance(-this.currentBet);
                             players.get(i).updateTableCoins(this.currentBet);
@@ -116,7 +116,7 @@ public class RoundOfPoker {
                     }
 
                     // CHECK IF THIS IS THE FIRST TIME OF OPENING AND PRINT THE OPENING STATEMENT
-                    if (checkOpen == 0) {
+                    if (checkOpen == 0 && firstOpen) {
                         System.out.println(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
                         size = i;
                         checkOpen = 1;
@@ -130,6 +130,9 @@ public class RoundOfPoker {
 
                         // CHECK IF THE PLAYER IS A HUMAN AND ASK THE PLAYER TO RAISE THE BET
                         if (players.get(i).isHuman() && !fold[i]) {
+                            if(firstOpen && players.get(0).isHuman)
+                                printSeenStatement(size, i);
+
                             System.out.println("Would you like to raise (y/n)? ");
                             boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
 
@@ -146,7 +149,7 @@ public class RoundOfPoker {
 
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
-                            else if (!checkHuman && bettingRound > 0) {
+                            else if (!checkHuman ) {
                                //System.out.println("Would you like to fold (y/n)? ");
                                 fold[i] = true;
                                 System.out.println(players.get(i).getName() + " says: I fold ");
@@ -169,7 +172,7 @@ public class RoundOfPoker {
 
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
-                            else if (!checkComputer && bettingRound > 0) {
+                            else if (!checkComputer) {
                                 fold[i] = true;
                                 System.out.println(players.get(i).getName() + " says: I  fold ");
                             }
@@ -257,7 +260,10 @@ public class RoundOfPoker {
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
     public void printSeenStatement(int size, int i){
-        System.out.println(players.get(i).getName() + " says: I see that " + players.get(size).pot() + " chip!");
+        if(players.get(size).pot() == 0)
+            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size -1).pot() + " chip!");
+        else
+            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size).pot() + " chip!");
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
@@ -283,8 +289,8 @@ public class RoundOfPoker {
         ComputerPlayer p3 = new ComputerPlayer(deck);
         ComputerPlayer p4 = new ComputerPlayer(deck);
         ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
-        players.add(p1);
         players.add(humanPlayer);
+        players.add(p1);
         players.add(p2);
         players.add(p3);
         players.add(p4);
