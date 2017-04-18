@@ -86,7 +86,7 @@ public class RoundOfPoker {
 
 
         // BETTING
-        int checkOpen = 0, bettingRound = 0, checkActivePlayer = 0, roundCounter = 0, size = 0, checkRound = 0;
+        int checkOpen = 0, roundCounter = 0, current = 0;
         boolean round = true, openingBetting = true, human = true, firstOpen = false;
 
         while (round) {
@@ -123,7 +123,7 @@ public class RoundOfPoker {
                     // CHECK IF THIS IS THE FIRST TIME OF OPENING AND PRINT THE OPENING STATEMENT
                     if (checkOpen == 0 && firstOpen) {
                         System.out.println(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
-                        size = i;
+                        current += this.currentBet;
                         checkOpen = 1;
                     }
                     // CHECK IF THE PLAYERS HAS ALREADY OPEN
@@ -134,7 +134,7 @@ public class RoundOfPoker {
                             if(checkActive(fold) == 1)
                                 break;
 
-                            printSeenStatement(size, i);
+                            printSeenStatement(current, i);
 
                             System.out.println("Would you like to raise (y/n)? ");
                             boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
@@ -143,8 +143,8 @@ public class RoundOfPoker {
                             if (checkHuman) {
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
-                                printRaiseStatement(i);
-                                size = i;
+                                printRaiseStatement(i, this.currentBet);
+                                current += this.currentBet;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkHuman ) {
@@ -167,9 +167,9 @@ public class RoundOfPoker {
                                 if(checkActive(fold) == 1)
                                     break;
 
-                                printSeenStatement(size, i);
-                                printRaiseStatement(i);
-                                size = i;
+                                printSeenStatement(current, i);
+                                printRaiseStatement(i, this.currentBet);
+                                current += this.currentBet;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkComputer) {
@@ -183,8 +183,6 @@ public class RoundOfPoker {
             System.out.println("");
             // UPDATE VARIABLES VALUES
             openingBetting = false;
-            bettingRound = 1;
-            checkRound = 1;
             roundCounter++;
 
 
@@ -257,16 +255,16 @@ public class RoundOfPoker {
     }
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
-    public void printSeenStatement(int size, int i){
-        if(players.get(size).updatePlayerPot() == 0)
-            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size -1).updatePlayerPot() + " chip!");
+    public void printSeenStatement(int currentPot, int i){
+        if(players.get(i).updatePlayerPot() == 0)
+            System.out.println(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
         else
-            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size).updatePlayerPot() + " chip!");
+            System.out.println(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
-    public void printRaiseStatement(int i){
-        System.out.println(players.get(i).getName() + " says: I raise " + players.get(i).updatePlayerPot() + " chip!");
+    public void printRaiseStatement(int i, int current){
+        System.out.println(players.get(i).getName() + " says: I raise " + current + " chip!");
     }
 
     // CHECK THE NUMBER OF PLAYER STILL IN THE GAME
@@ -310,9 +308,8 @@ public class RoundOfPoker {
         while(poker && players.contains(humanPlayer)){
             round.play();
             System.out.println("Would like to play another round of poker (y/n)");
-            name = input.nextLine();
-            if(name == "y")
-                poker = false;
+            Scanner in = new Scanner(System.in);
+            String response = in.nextLine();
 
             for(int i = 0; i < players.size(); i++){
                 if(players.get(i).getCoinsBalance() == 0)
@@ -321,12 +318,12 @@ public class RoundOfPoker {
             deck.reset();
             for(PokerPlayer player : players)
               player.resetHand();
+            
+            if(response.equalsIgnoreCase("n"))
+                poker = false;
         }
 
         //System.out.println(round.players.get(0).name);
-
-
-
     }
 }
 
