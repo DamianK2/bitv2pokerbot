@@ -101,18 +101,22 @@ public class RoundOfPoker {
                             if (players.get(i).isHuman() && !fold[i] && human && checkOpen == 0 && players.get(i).canOpenBet()) {
                                 System.out.println("Would you like to open bet (y/n)? ");
                                firstOpen = players.get(i).askOpenBet(this.currentBet);
-                                this.currentBet = 1;
-                                players.get(i).updateCoinsBalance(-this.currentBet);
-                                players.get(i).updateTableCoins(this.currentBet);
-                                human = false;
+                               if(firstOpen){
+                                   this.currentBet = 1;
+                                   players.get(i).updateCoinsBalance(-this.currentBet);
+                                   players.get(i).updateTableCoins(this.currentBet);
+                                   human = false;
+                               }
                             }
                         }
                         // CHECK IF THE COMPUTER PLAYER IS THE FIRST PLAYER TO OPEN
                         else if(!players.get(i).isHuman() && players.get(i).canOpenBet()){
                             firstOpen = players.get(i).askOpenBet(this.currentBet);
-                            this.currentBet = 1;
-                            players.get(i).updateCoinsBalance(-this.currentBet);
-                            players.get(i).updateTableCoins(this.currentBet);
+                            if(firstOpen){
+                                this.currentBet = 1;
+                                players.get(i).updateCoinsBalance(-this.currentBet);
+                                players.get(i).updateTableCoins(this.currentBet);
+                            }
                         }
                     }
 
@@ -303,7 +307,7 @@ public class RoundOfPoker {
         RoundOfPoker round = new RoundOfPoker(players, deck);
 
         boolean poker = true;
-        while(poker || players.contains(humanPlayer)){
+        while(poker && players.contains(humanPlayer)){
             round.play();
             System.out.println("Would like to play another round of poker (y/n)");
             name = input.nextLine();
@@ -315,6 +319,8 @@ public class RoundOfPoker {
                     players.remove(i);
             }
             deck.reset();
+            for(PokerPlayer player : players)
+              player.resetHand();
         }
 
         //System.out.println(round.players.get(0).name);
