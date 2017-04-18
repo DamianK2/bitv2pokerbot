@@ -138,7 +138,7 @@ public class PokerPlayer
 		this.coinsOnTable += coinsAmount;
 	}
 
-	public int pot(){
+	public int updatePlayerPot(){
 		return this.coinsOnTable;
 	}
 
