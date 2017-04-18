@@ -86,7 +86,7 @@ public class RoundOfPoker {
 
 
         // BETTING
-        int checkOpen = 0, roundCounter = 0, current = 0;
+        int checkOpen = 0, roundCounter = 0, currentPot = 0;
         boolean round = true, openingBetting = true, human = true, firstOpen = false;
 
         while (round) {
@@ -123,7 +123,7 @@ public class RoundOfPoker {
                     // CHECK IF THIS IS THE FIRST TIME OF OPENING AND PRINT THE OPENING STATEMENT
                     if (checkOpen == 0 && firstOpen) {
                         System.out.println(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
-                        current += this.currentBet;
+                        currentPot += this.currentBet;
                         checkOpen = 1;
                     }
                     // CHECK IF THE PLAYERS HAS ALREADY OPEN
@@ -134,7 +134,7 @@ public class RoundOfPoker {
                             if(checkActive(fold) == 1)
                                 break;
 
-                            printSeenStatement(current, i);
+                            printSeenStatement(currentPot, i);
 
                             System.out.println("Would you like to raise (y/n)? ");
                             boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
@@ -144,7 +144,7 @@ public class RoundOfPoker {
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
                                 printRaiseStatement(i, this.currentBet);
-                                current += this.currentBet;
+                                currentPot += this.currentBet;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkHuman ) {
@@ -167,9 +167,9 @@ public class RoundOfPoker {
                                 if(checkActive(fold) == 1)
                                     break;
 
-                                printSeenStatement(current, i);
+                                printSeenStatement(currentPot, i);
                                 printRaiseStatement(i, this.currentBet);
-                                current += this.currentBet;
+                                currentPot += this.currentBet;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkComputer) {
@@ -188,13 +188,13 @@ public class RoundOfPoker {
 
             // CHECK IF THE GAME ROUND OF POKER IS FINNISH AND ANNOUNCE WINNER AND RESET THE POT
             if(roundCounter == 2){
-                winner(fold, current);
+                winner(fold, currentPot);
                 resetPlayerPot();
                 round = false;
             }
             //CHECK IF THERe'S ONLY ONE PLAYER LEFT IN THE GAME AND ANNOUNCE WINNER AND RESET THE POT
             else if(checkActive(fold) == 1){
-                winner(fold, current);
+                winner(fold, currentPot);
                 resetPlayerPot();
                 round = false;
             }
@@ -239,9 +239,8 @@ public class RoundOfPoker {
         if(winnings > 0) {
             System.out.println(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
             System.out.println(players.get(winnerPos).getHand());
-            players.get(winnerPos).updateCoinsBalance(winnings);
             System.out.println(players.get(winnerPos).getName() + " has " +
-                    players.get(winnerPos).getCoinsBalance() + " chip(s) in the bank");
+                    (players.get(winnerPos).getCoinsBalance() + winnings) + " chip(s) in the bank");
         }
         else
             System.out.println("No winner because none of the players can open the bet");
