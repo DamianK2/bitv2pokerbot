@@ -98,7 +98,7 @@ public class RoundOfPoker {
                         // CHECK IF THE PLAYER IS A HUMAN AND OPEN THE BET
                         if(players.get(i).isHuman()){
                             // CHECK IF THE HUMAN PLAYER IS THE FIRST PLAYER TO OPEN
-                            if (players.get(i).isHuman() && !fold[i] && human && checkOpen == 0 && players.get(i).canOpenBet()) {
+                            if (players.get(i).canOpenBet() && !fold[i] && human && checkOpen == 0) {
                                 System.out.println("Would you like to open bet (y/n)? ");
                                firstOpen = players.get(i).askOpenBet(this.currentBet);
                                if(firstOpen){
@@ -110,7 +110,7 @@ public class RoundOfPoker {
                             }
                         }
                         // CHECK IF THE COMPUTER PLAYER IS THE FIRST PLAYER TO OPEN
-                        else if(!players.get(i).isHuman() && players.get(i).canOpenBet()){
+                        else if(players.get(i).canOpenBet() && !players.get(i).isHuman()){
                             firstOpen = players.get(i).askOpenBet(this.currentBet);
                             if(firstOpen){
                                 this.currentBet = 1;
@@ -303,7 +303,7 @@ public class RoundOfPoker {
         players.add(p2);
         players.add(p3);
         players.add(p4);
-        Collections.shuffle(players);
+       // Collections.shuffle(players);
         RoundOfPoker round = new RoundOfPoker(players, deck);
 
         boolean poker = true;
