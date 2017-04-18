@@ -14,6 +14,7 @@ public class PokerPlayer
 	protected int coins, coinsOnTable;
 	protected String name;
 	protected boolean isHuman;
+	private int pot = 0;
 	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, PLAYER_STARTING_COINS = 10, TABLE_STARTING_COINS = 0;
 	
 	
@@ -120,7 +121,7 @@ public class PokerPlayer
 			return true;
 	}
 	
-	public boolean askRaiseBet() {
+	public boolean askRaiseBet(int currentBet) {
 		if(hand.isTwoPair() || hand.isOnePair() || hand.isHighHand())
 			return false;
 		else
@@ -137,6 +138,10 @@ public class PokerPlayer
 		this.coinsOnTable += coinsAmount;
 	}
 
+	public int pot(){
+		return this.coinsOnTable;
+	}
+
 	public String getHand()
 	{
 		String cards = "";
@@ -145,6 +150,10 @@ public class PokerPlayer
 			cards += i + ": " + this.hand.getCardAt(i).toString() + "\n";
 
 		return cards;
+	}
+
+	public int getHandValue(){
+		return hand.getGameValue();
 	}
 	
 	

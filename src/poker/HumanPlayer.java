@@ -22,7 +22,7 @@ public class HumanPlayer extends PokerPlayer {
         
     	do {
         	discardCards = this.scanner.nextLine();
-        	
+
         	if(!this.parser.checkAmountDiscards(discardCards)) {
         		System.out.println("You can only discard a maximum of 3 cards.");
                 System.out.println("Please type in the cards you would like to discard again.");	
