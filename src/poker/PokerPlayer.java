@@ -155,6 +155,11 @@ public class PokerPlayer
 	public int getHandValue(){
 		return hand.getGameValue();
 	}
+
+	public void resetHand()
+	{
+		this.hand = new HandOfCards(this.deck);
+	}
 	
 	
 	/*
