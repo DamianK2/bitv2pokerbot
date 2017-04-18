@@ -98,7 +98,7 @@ public class RoundOfPoker {
                         // CHECK IF THE PLAYER IS A HUMAN AND OPEN THE BET
                         if(players.get(i).isHuman()){
                             // CHECK IF THE HUMAN PLAYER IS THE FIRST PLAYER TO OPEN
-                            if (players.get(i).isHuman() && !fold[i] && human && checkOpen == 0) {
+                            if (players.get(i).isHuman() && !fold[i] && human && checkOpen == 0 && players.get(i).canOpenBet()) {
                                 System.out.println("Would you like to open bet (y/n)? ");
                                firstOpen = players.get(i).askOpenBet(this.currentBet);
                                 this.currentBet = 1;
@@ -108,7 +108,7 @@ public class RoundOfPoker {
                             }
                         }
                         // CHECK IF THE COMPUTER PLAYER IS THE FIRST PLAYER TO OPEN
-                        else if(!players.get(i).isHuman()){
+                        else if(!players.get(i).isHuman() && players.get(i).canOpenBet()){
                             firstOpen = players.get(i).askOpenBet(this.currentBet);
                             this.currentBet = 1;
                             players.get(i).updateCoinsBalance(-this.currentBet);
@@ -203,7 +203,7 @@ public class RoundOfPoker {
     public  int currentTableBetAmount(){
         int pot = 0;
         for (PokerPlayer player : this.players)
-            pot += player.pot();
+            pot += player.updatePlayerPot();
 
         return pot;
     }
@@ -211,9 +211,11 @@ public class RoundOfPoker {
     // A METHOD THAT CHECKS WHICH PLAYER IS THE WINNER AND DISPLAY PLAYERS HAND
     public void winner(boolean fold[]){
         // CHECK FOR WINNER
+        int winnings = currentTableBetAmount();
         int winnerPos = 0, cardGameValue = 0;
         for(int i = 0; i < players.size(); i++){
             if(i ==  0 ) {
+                players.get(i).updateTableCoins(-this.currentBet);
                 System.out.println(players.get(i).getName() + " goes first");
                 System.out.println(players.get(i).getHand());
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]) {
@@ -223,12 +225,14 @@ public class RoundOfPoker {
             }
             else{
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]){
+                    players.get(i).updateTableCoins(-this.currentBet);
                     System.out.println(players.get(i).getName() + " says 'read them and weep'");
                     System.out.println(players.get(i).getHand());
                     cardGameValue = players.get(i).getHandValue();
                     winnerPos = i;
                 }
                 else{
+                    players.get(i).updateTableCoins(-this.currentBet);
                     System.out.println(players.get(i).getName() + " says 'read them and weep'");
                     System.out.println(players.get(i).getHand());
                 }
@@ -237,7 +241,6 @@ public class RoundOfPoker {
         }
 
         // PRINT WINNER
-        int winnings = currentTableBetAmount();
         if(winnings > 0) {
             System.out.println(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
             System.out.println(players.get(winnerPos).getHand());
@@ -251,15 +254,15 @@ public class RoundOfPoker {
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
     public void printSeenStatement(int size, int i){
-        if(players.get(size).pot() == 0)
-            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size -1).pot() + " chip!");
+        if(players.get(size).updatePlayerPot() == 0)
+            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size -1).updatePlayerPot() + " chip!");
         else
-            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size).pot() + " chip!");
+            System.out.println(players.get(i).getName() + " says: I see that " + players.get(size).updatePlayerPot() + " chip!");
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
     public void printRaiseStatement(int i){
-        System.out.println(players.get(i).getName() + " says: I raise " + players.get(i).pot() + " chip!");
+        System.out.println(players.get(i).getName() + " says: I raise " + players.get(i).updatePlayerPot() + " chip!");
     }
 
     // CHECK THE NUMBER OF PLAYER STILL IN THE GAME
@@ -300,7 +303,7 @@ public class RoundOfPoker {
         RoundOfPoker round = new RoundOfPoker(players, deck);
 
         boolean poker = true;
-        while(poker){
+        while(poker || players.contains(humanPlayer)){
             round.play();
             System.out.println("Would like to play another round of poker (y/n)");
             name = input.nextLine();
@@ -311,6 +314,7 @@ public class RoundOfPoker {
                 if(players.get(i).getCoinsBalance() == 0)
                     players.remove(i);
             }
+            deck.reset();
         }
 
         //System.out.println(round.players.get(0).name);
