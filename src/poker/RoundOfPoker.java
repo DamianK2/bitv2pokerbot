@@ -186,38 +186,31 @@ public class RoundOfPoker {
             roundCounter++;
 
 
-            // CHECK IF THE GAME ROUND OF POKER IS FINNISH
+            // CHECK IF THE GAME ROUND OF POKER IS FINNISH AND ANNOUNCE WINNER AND RESET THE POT
             if(roundCounter == 2){
+                winner(fold, current);
+                resetPlayerPot();
                 round = false;
             }
-            //CHECK IF THER'S ONLY ONE PLAYER LEFT IN THE GAME
+            //CHECK IF THERe'S ONLY ONE PLAYER LEFT IN THE GAME AND ANNOUNCE WINNER AND RESET THE POT
             else if(checkActive(fold) == 1){
+                winner(fold, current);
+                resetPlayerPot();
                 round = false;
             }
 
         }
-        // DISPLAY PLAYERS HAND AND ANNOUNCE WINNER OF THE POKER ROUND
-        winner(fold);
 
-    }
-
-    // A METHOD THAT CHECK THE VALUE OF THE POT IN THE CURRENT ROUND OF POKER
-    public  int currentTableBetAmount(){
-        int pot = 0;
-        for (PokerPlayer player : this.players)
-            pot += player.updatePlayerPot();
-
-        return pot;
     }
 
     // A METHOD THAT CHECKS WHICH PLAYER IS THE WINNER AND DISPLAY PLAYERS HAND
-    public void winner(boolean fold[]){
+    public void winner(boolean fold[], int currentPot){
         // CHECK FOR WINNER
-        int winnings = currentTableBetAmount();
+        int winnings = currentPot;
         int winnerPos = 0, cardGameValue = 0;
         for(int i = 0; i < players.size(); i++){
             if(i ==  0 ) {
-                players.get(i).updateTableCoins(-this.currentBet);
+               // players.get(i).updateTableCoins(-this.currentBet);
                 System.out.println(players.get(i).getName() + " goes first");
                 System.out.println(players.get(i).getHand());
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]) {
@@ -227,14 +220,14 @@ public class RoundOfPoker {
             }
             else{
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]){
-                    players.get(i).updateTableCoins(-this.currentBet);
+                   // players.get(i).updateTableCoins(-this.currentBet);
                     System.out.println(players.get(i).getName() + " says 'read them and weep'");
                     System.out.println(players.get(i).getHand());
                     cardGameValue = players.get(i).getHandValue();
                     winnerPos = i;
                 }
                 else{
-                    players.get(i).updateTableCoins(-this.currentBet);
+                    //players.get(i).updateTableCoins(-this.currentBet);
                     System.out.println(players.get(i).getName() + " says 'read them and weep'");
                     System.out.println(players.get(i).getHand());
                 }
@@ -252,6 +245,14 @@ public class RoundOfPoker {
         }
         else
             System.out.println("No winner because none of the players can open the bet");
+
+    }
+
+    // RESET THE CURRENT POT
+    public void resetPlayerPot(){
+        for(PokerPlayer player : players){
+            player.updateTableCoins(-(player.updatePlayerPot()));
+        }
     }
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
@@ -318,7 +319,7 @@ public class RoundOfPoker {
             deck.reset();
             for(PokerPlayer player : players)
               player.resetHand();
-            
+
             if(response.equalsIgnoreCase("n"))
                 poker = false;
         }
