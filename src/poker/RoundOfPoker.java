@@ -1,5 +1,6 @@
 package poker;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class RoundOfPoker {
@@ -126,8 +127,8 @@ public class RoundOfPoker {
 
                         // CHECK IF THE PLAYER IS A HUMAN AND ASK THE PLAYER TO RAISE THE BET
                         if (players.get(i).isHuman() && !fold[i]) {
-                            if(checkFold(fold) == 1)
-                                break;;
+                            if(checkActive(fold) == 1)
+                                break;
 
                             printSeenStatement(size, i);
 
@@ -151,12 +152,15 @@ public class RoundOfPoker {
                         // CHECK IF THE PLAYER IS A COMPUTER PLAYER AND ASK THE PLAYER TO RAISE THE BET
                         else {
                             boolean checkComputer = players.get(i).askRaiseBet(this.currentBet);
+                            // IF THE PLAYER COIN BALANCE IS ZERO REMOVE THE PLAYER FROM THE GAME
+                            if(checkActive(fold) == 1)
+                                break;;
 
                             // IF THE PLAYER SAID YES THEN RAISE BET
                             if (checkComputer ) {
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
-                                if(checkFold(fold) == 1)
+                                if(checkActive(fold) == 1)
                                     break;
 
                                 printSeenStatement(size, i);
@@ -185,7 +189,7 @@ public class RoundOfPoker {
                 round = false;
             }
             //CHECK IF THER'S ONLY ONE PLAYER LEFT IN THE GAME
-            else if(checkFold(fold) == 1){
+            else if(checkActive(fold) == 1){
                 round = false;
             }
 
@@ -259,7 +263,7 @@ public class RoundOfPoker {
     }
 
     // CHECK THE NUMBER OF PLAYER STILL IN THE GAME
-    public int checkFold(boolean fold[]){
+    public int checkActive(boolean fold[]){
         int checkActivePlayer = 0;
         for(int k = 0; k < players.size(); k++){
             if(!fold[k]){
@@ -292,11 +296,26 @@ public class RoundOfPoker {
         players.add(p2);
         players.add(p3);
         players.add(p4);
+        Collections.shuffle(players);
         RoundOfPoker round = new RoundOfPoker(players, deck);
+
+        boolean poker = true;
+        while(poker){
+            round.play();
+            System.out.println("Would like to play another round of poker (y/n)");
+            name = input.nextLine();
+            if(name == "y")
+                poker = false;
+
+            for(int i = 0; i < players.size(); i++){
+                if(players.get(i).getCoinsBalance() == 0)
+                    players.remove(i);
+            }
+        }
 
         //System.out.println(round.players.get(0).name);
 
-        round.play();
+
 
     }
 }
