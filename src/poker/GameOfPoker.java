@@ -9,14 +9,28 @@ public class GameOfPoker {
     public final static int COMPUTER_PLAYERS = 4;
     private String gameMessage;
     private long currentMessageId;
+    private String playerName;
 
-    public GameOfPoker(int messageId) {
+    public GameOfPoker(long messageId, String name) {
         this.currentMessageId = messageId;
         this.gameMessage = "";
+        this.playerName = name;
     }
 
     public void updateGameMessage(String message) {
         this.gameMessage += message;
+    }
+
+    public long getCurrentMessageId() {
+        return currentMessageId;
+    }
+
+    public String getGameMessage() {
+        return gameMessage;
+    }
+
+    public void clearGameMessage() {
+        this.gameMessage = "";
     }
 
     public void playPoker() {
@@ -24,16 +38,13 @@ public class GameOfPoker {
         Parser parser = new Parser();
 
         Scanner input = new Scanner(System.in);
-        HumanPlayer humanPlayer = new HumanPlayer(deck);
+        HumanPlayer humanPlayer = new HumanPlayer(deck, this, this.playerName);
 
-        this.updateGameMessage("Welcome to the Automated Poker Machine ...\n");
-        this.updateGameMessage("What is your name? ");
-        humanPlayer.askUserName();
-        this.updateGameMessage("Let's play POKER ...\n");
+        this.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...\n");
 
         // MAKE HUMAN PLAYER, PASS A NAME
 
-        ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
+        ArrayList<PokerPlayer> players = new ArrayList<>();
         players.add(humanPlayer);
 
         for (int i = 0; i <= COMPUTER_PLAYERS; i++)
@@ -76,7 +87,7 @@ public class GameOfPoker {
     }
 
     public static void main(String[] args) {
-        GameOfPoker game = new GameOfPoker(0);
+        GameOfPoker game = new GameOfPoker(854669882297901056L, "Marcin");
         game.playPoker();
     }
 }

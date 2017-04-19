@@ -281,7 +281,7 @@ public class RoundOfPoker {
 
 
     public static void main(String[] args) {
-        DeckOfCards deck = new DeckOfCards();
+       /* DeckOfCards deck = new DeckOfCards();
 
         Scanner input = new Scanner(System.in);
 
@@ -324,7 +324,7 @@ public class RoundOfPoker {
 
             if(response.equalsIgnoreCase("n"))
                 poker = false;
-        }
+        }*/
 
         //System.out.println(round.players.get(0).name);
     }

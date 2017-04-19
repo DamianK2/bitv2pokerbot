@@ -15,8 +15,14 @@ public class Tweet {
     private Twitter twitter;
     private Configuration build;
 
-    public Tweet(String consumerKey, String consumerKeySecret, String accessToken, String accessTokenSecret)
+    public Tweet()
     {
+
+        String consumerKey = "OaARzvHyEtdpebYqRBr0R7fpn";
+        String consumerKeySecret = "eKsSm18Lq2aMyUfUDUxcLDTCPSIoTetjOeCN585VGdL3KuRS2D";
+        String accessToken = "851895473032105985-LwJFH6eqi80mfWeVbKE1G7HygV41Cc5";
+        String accessTokenSecret = "oBWIJSFZFRyglFLyq0rjuPrWACyQPhvzJ3wYUqkRxKTqs";
+
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey(consumerKey)
@@ -84,7 +90,7 @@ public class Tweet {
 
     }
 
-    public void stream(String[] keywords) throws TwitterException
+    public void stream(String keyword) throws TwitterException
     {
 //        ConfigurationBuilder cb = new ConfigurationBuilder();
 //        cb.setDebugEnabled(true)
@@ -101,6 +107,11 @@ public class Tweet {
         twitterStream.addListener(new StatusListener () {
             public void onStatus(Status status) {
                 System.out.println("ID: " + status.getId() + " @" + status.getUser().getScreenName() + " " + status.getText()); // print tweet text to console
+
+                // CREATE NEW POKER GAME
+                GameOfPoker game = new GameOfPoker(status.getId(), status.getUser().getScreenName());
+                game.playPoker();
+
             }
 
             @Override
@@ -131,15 +142,15 @@ public class Tweet {
         });
 
         FilterQuery tweetFilterQuery = new FilterQuery();
-        tweetFilterQuery.track(keywords);
-        tweetFilterQuery.language(new String[]{"en"});
+        tweetFilterQuery.track(keyword);
+        //tweetFilterQuery.language(new String[]{"en"});
 
         twitterStream.filter(tweetFilterQuery);
     }
 
     public static void main(String[] args) throws Exception
     {
-        FileReader fileReader = new FileReader(new File("./secret.txt"));
+        /*FileReader fileReader = new FileReader(new File("./secret.txt"));
         BufferedReader br = new BufferedReader(fileReader);
 
         String line;
@@ -151,14 +162,15 @@ public class Tweet {
             index++;
         }
 
-        Tweet tweet = new Tweet(keys[0], keys[1], keys[2], keys[3]);
+        Tweet tweet = new Tweet(keys[0], keys[1], keys[2], keys[3]);*/
         //tweet.stream(new String[]{"bit2_poker"});
 
+        Tweet tweet = new Tweet();
         //tweet.post("Hello World!");
         //new Tweet().getTimelineTweets();
         //new Tweet().searchTweets("banana");
-        //new Tweet().stream();
-        tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
+        tweet.stream("#bit2_poker");
+        //tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
     }
 
 }

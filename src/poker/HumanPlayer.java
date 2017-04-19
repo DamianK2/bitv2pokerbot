@@ -1,16 +1,24 @@
 package poker;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+
 import java.util.Scanner;
 
 public class HumanPlayer extends PokerPlayer {
 
     private Scanner scanner;
     private Parser parser;
+    private Tweet tweet;
+    private GameOfPoker game;
 
-    public HumanPlayer(DeckOfCards deck) {
+    public HumanPlayer(DeckOfCards deck, GameOfPoker game, String name) {
         super(deck);
         this.isHuman = true;
         this.scanner = new Scanner(System.in);
         this.parser = new Parser();
+        this.tweet = new Tweet();
+        this.game = game;
+        this.name = name;
     }
 
     public int askDiscard()
@@ -78,11 +86,5 @@ public class HumanPlayer extends PokerPlayer {
     		return false;
     }
 
-    public String askUserName()
-	{
-
-		this.name = this.scanner.nextLine();
-		return this.name;
-	}
 
 }
