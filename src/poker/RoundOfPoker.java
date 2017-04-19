@@ -190,12 +190,14 @@ public class RoundOfPoker {
             // CHECK IF THE GAME ROUND OF POKER IS FINNISH AND ANNOUNCE WINNER AND RESET THE POT
             if(roundCounter == 2){
                 winner(fold, currentPot);
+                currentPot = 0;
                 resetPlayerPot();
                 round = false;
             }
             //CHECK IF THERe'S ONLY ONE PLAYER LEFT IN THE GAME AND ANNOUNCE WINNER AND RESET THE POT
             else if(checkActive(fold) == 1){
                 winner(fold, currentPot);
+                currentPot = 0;
                 resetPlayerPot();
                 round = false;
             }
