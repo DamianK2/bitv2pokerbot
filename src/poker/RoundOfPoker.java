@@ -105,6 +105,7 @@ public class RoundOfPoker {
                                    this.currentBet = 1;
                                    players.get(i).updateCoinsBalance(-this.currentBet);
                                    players.get(i).updateTableCoins(this.currentBet);
+                                   currentPot += this.currentBet;
                                    human = false;
                                }
                             }
@@ -237,10 +238,11 @@ public class RoundOfPoker {
 
         // PRINT WINNER
         if(winnings > 0) {
+            players.get(winnerPos).updateCoinsBalance(winnings);
             System.out.println(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
             System.out.println(players.get(winnerPos).getHand());
             System.out.println(players.get(winnerPos).getName() + " has " +
-                    (players.get(winnerPos).getCoinsBalance() + winnings) + " chip(s) in the bank");
+                    players.get(winnerPos).getCoinsBalance()  + " chip(s) in the bank");
         }
         else
             System.out.println("No winner because none of the players can open the bet");
@@ -256,10 +258,7 @@ public class RoundOfPoker {
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
     public void printSeenStatement(int currentPot, int i){
-        if(players.get(i).updatePlayerPot() == 0)
-            System.out.println(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
-        else
-            System.out.println(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
+        System.out.println(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
