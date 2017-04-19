@@ -6,9 +6,8 @@ public class HumanPlayer extends PokerPlayer {
     private Scanner scanner;
     private Parser parser;
 
-    public HumanPlayer(DeckOfCards deck, String name) {
+    public HumanPlayer(DeckOfCards deck) {
         super(deck);
-        this.name = name;
         this.isHuman = true;
         this.scanner = new Scanner(System.in);
         this.parser = new Parser();
@@ -78,5 +77,12 @@ public class HumanPlayer extends PokerPlayer {
     	else
     		return false;
     }
+
+    public String askUserName()
+	{
+
+		this.name = this.scanner.nextLine();
+		return this.name;
+	}
 
 }

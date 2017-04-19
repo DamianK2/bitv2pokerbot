@@ -35,6 +35,19 @@ public class Tweet {
         System.out.println("Successfully updated the status to [" + status.getText() + "].");
     }
 
+    public void replyToTweet(String message, long messageId) throws TwitterException
+    {
+        Twitter twitter = this.twitter;
+        StatusUpdate statusUpdate = new StatusUpdate(message);
+        statusUpdate.setInReplyToStatusId(messageId);
+        try {
+            twitter.updateStatus(statusUpdate);
+        } catch (TwitterException e) {
+            System.out.println("Something went wrong while posting tweet");
+        }
+
+    }
+
     public void getTimelineTweets() throws TwitterException
     {
         Twitter twitter = this.twitter;
@@ -87,7 +100,7 @@ public class Tweet {
 
         twitterStream.addListener(new StatusListener () {
             public void onStatus(Status status) {
-                System.out.println("@" + status.getUser().getScreenName() + " " + status.getText()); // print tweet text to console
+                System.out.println("ID: " + status.getId() + " @" + status.getUser().getScreenName() + " " + status.getText()); // print tweet text to console
             }
 
             @Override
@@ -139,12 +152,13 @@ public class Tweet {
         }
 
         Tweet tweet = new Tweet(keys[0], keys[1], keys[2], keys[3]);
-        tweet.stream(new String[]{"bit2_poker"});
+        //tweet.stream(new String[]{"bit2_poker"});
 
         //tweet.post("Hello World!");
         //new Tweet().getTimelineTweets();
         //new Tweet().searchTweets("banana");
         //new Tweet().stream();
+        tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
     }
 
 }
