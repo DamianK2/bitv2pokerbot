@@ -139,7 +139,7 @@ public class Tweet {
         }
 
         Tweet tweet = new Tweet(keys[0], keys[1], keys[2], keys[3]);
-        tweet.stream(new String[]{"banana", "bit2_poker"});
+        tweet.stream(new String[]{"bit2_poker"});
 
         //tweet.post("Hello World!");
         //new Tweet().getTimelineTweets();
