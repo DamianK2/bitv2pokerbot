@@ -14,40 +14,40 @@ public class RoundOfPoker {
         this.currentBet = 0;
     }
 
-    public void play()
+    public void play(GameOfPoker game)
     {
 
         // START ROUND
-        System.out.println("New Deal:");
+        game.updateGameMessage("New Deal:");
 
         for (PokerPlayer player : this.players)
-            System.out.println("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
+            game.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
             if (player.canOpenBet()) {
-                System.out.println("> " + player.getName() + " says: I can open");
+                game.updateGameMessage("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
             else
-                System.out.println("> " + player.getName() + " says: I cannot open");
+                game.updateGameMessage("> " + player.getName() + " says: I cannot open");
 
         if (!canOpen) {
-            System.out.println("Sorry, we cannot open the game.");
+            game.updateGameMessage("Sorry, we cannot open the game.");
             return;
         }
 
-        System.out.println("You have been dealt the following hand:");
+        game.updateGameMessage("You have been dealt the following hand:");
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
         for (PokerPlayer player : this.players)
             if (player.isHuman())
-                System.out.println(player.getHand());
+                game.updateGameMessage(player.getHand());
 
         // DISCARD
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
-                System.out.println(">> Which card(s) would you like to discard (e.g., 1,3): ");
+                game.updateGameMessage(">> Which card(s) would you like to discard (e.g., 1,3): ");
                 player.askDiscard();
             }
         }
@@ -55,8 +55,8 @@ public class RoundOfPoker {
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
         for (PokerPlayer player : this.players)
             if (player.isHuman()) {
-                System.out.println("Your hand now looks like:");
-                System.out.println(player.getHand());
+                game.updateGameMessage("Your hand now looks like:");
+                game.updateGameMessage(player.getHand());
             }
 
         // ASK TO FOLD
@@ -65,7 +65,7 @@ public class RoundOfPoker {
         for (int i = 0; i < players.size(); i++) {
 
             if (players.get(i).isHuman()) {
-                System.out.println(">> Would you like to fold (y/n)? ");
+                game.updateGameMessage(">> Would you like to fold (y/n)? ");
             }
             fold[i] = players.get(i).askFold(this.currentBet);
             if(!fold[i])
@@ -327,6 +327,34 @@ public class RoundOfPoker {
         }*/
 
         //System.out.println(round.players.get(0).name);
+
+        String message = "Hello bit2_poker Let's play POKER ...\n" +
+                "New Deal:\n" +
+                "> Aurelia has 10 coins in the bank\n" +
+                "> Cassie has 10 coins in the bank\n" +
+                "> Horace has 10 coins in the bank\n" +
+                "> Elouise has 10 coins in the bank\n" +
+                "> Normand has 10 coins in the bank\n" +
+                "> bit2_poker has 10 coins in the bank\n" +
+                "> Aurelia says: I cannot open\n" +
+                "> Cassie says: I cannot open\n" +
+                "> Horace says: I can open\n" +
+                "> Elouise says: I cannot open\n" +
+                "> Normand says: I cannot open\n" +
+                "> bit2_poker says: I can open\n" +
+                "You have been dealt the following hand:\n" +
+                "0: 7H\n" +
+                "1: 7S\n" +
+                "2: 6S\n" +
+                "3: 3S\n" +
+                "4: 2C\n" +
+                "\n" +
+                ">> Which card(s) would you like to discard (e.g., 1,3): ";
+        /*if (message.length() > 140) {
+            System.out.println(message.substring(0, 130));
+            System.out.println(message = message.substring(130));
+        }*/
+        System.out.println(message.substring(140));
     }
 }
 
