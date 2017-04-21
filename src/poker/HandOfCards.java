@@ -184,11 +184,10 @@ public class HandOfCards {
 			check = false;
 		else if(this.isStraight())
 			check = false;
-		else if(this.isStraightFlush())
+		else if (this.isStraightFlush())
 			check = false;
-		else if(this.isThreeOfAKind())
-			check = false;
-		else check = !this.isTwoPair();
+		else
+			check = !this.isThreeOfAKind() && !this.isTwoPair();
 		return check;
 	}
 
@@ -350,9 +349,7 @@ public class HandOfCards {
 	// if it is not a straight then it is a broken straight due to our previous checks in getDiscardProbabilty
 	private boolean isBrokenStraight() {
 		boolean check = false;
-		if(this.isStraight())
-			check = false;
-		else check = !(this.isThreeOfAKind() || this.isTwoPair() || this.isOnePair());
+		check = !this.isStraight() && !(this.isThreeOfAKind() || this.isTwoPair() || this.isOnePair());
 		return check;
 	}
 
@@ -361,12 +358,10 @@ public class HandOfCards {
 		boolean check = false;
 		if (cardPos >= 0 && cardPos < HandOfCards.SIZE - 2 && hand[cardPos].getGameValue() == hand[cardPos+1].getGameValue() + 1 && hand[cardPos+1].getGameValue() + 1 == hand[cardPos+2].getGameValue() + 2)
 			check = false;
-		else if (cardPos < HandOfCards.SIZE - 1 && cardPos >= 1 && hand[cardPos].getGameValue() == hand[cardPos+1].getGameValue() + 1 && hand[cardPos+1].getGameValue() + 1 == hand[cardPos-1].getGameValue() - 1)
-			check = false;
-		else if (cardPos < HandOfCards.SIZE && cardPos >= 2 && hand[cardPos].getGameValue() == hand[cardPos-2].getGameValue() -2 && hand[cardPos-1].getGameValue() - 1 == hand[cardPos].getGameValue())
+		else if (cardPos < HandOfCards.SIZE - 1 && cardPos >= 1 && hand[cardPos].getGameValue() == hand[cardPos + 1].getGameValue() + 1 && hand[cardPos + 1].getGameValue() + 1 == hand[cardPos - 1].getGameValue() - 1)
 			check = false;
 		else
-			check = !(cardPos < HandOfCards.SIZE - 2 && hand[cardPos + 1].getGameValue() + 1 == hand[cardPos + 2].getGameValue() + 2);
+			check = !(cardPos < HandOfCards.SIZE && cardPos >= 2 && hand[cardPos].getGameValue() == hand[cardPos - 2].getGameValue() - 2 && hand[cardPos - 1].getGameValue() - 1 == hand[cardPos].getGameValue()) && !(cardPos < HandOfCards.SIZE - 2 && hand[cardPos + 1].getGameValue() + 1 == hand[cardPos + 2].getGameValue() + 2);
 		return check;
 	}
 

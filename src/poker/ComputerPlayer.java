@@ -136,14 +136,12 @@ public class ComputerPlayer extends PokerPlayer {
     }
  
     public boolean askOpenBet(int currentBet) {
-    	if(this.behaviourType == "safe"){
-    		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
-    			return true;	//Even when playing safe with a good had player will be willing to open
-    		}
-    		else //Even when playing safe with a good had player will be willing to open
+    	if(this.behaviourType == "safe") {
+			//Even when playing safe with a good had player will be willing to open
+			return this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0 || this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0;
+//Even when playing safe with a good had player will be willing to open
 //If player has only a high hand, don't open.
-				return this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0;
-    	}
+		}
     	else if(this.behaviourType == "normal"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
     			return true;
