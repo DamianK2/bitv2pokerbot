@@ -108,6 +108,32 @@ public class Tweet {
 
     }
 
+
+    public void getMentions()
+    {
+
+        try {
+            User user = twitter.showUser("bit2_poker");
+            List<Status> statuses = twitter.getMentionsTimeline();
+            System.out.println("Showing @" + user.getScreenName() + "'s mentions.");
+            for (Status status : statuses) {
+                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+            }
+        } catch (TwitterException te) {
+            te.printStackTrace();
+            System.out.println("Failed to get timeline: " + te.getMessage());
+            System.exit(-1);
+        }
+    }
+
+    public void getReplies(long messageId) throws TwitterException
+    {
+        Status status = twitter.showStatus(messageId);
+        Status replyStatus = twitter.showStatus(status.getInReplyToStatusId());
+        System.out.println(replyStatus.getText());
+    }
+
+
     public void stream(String keyword) throws TwitterException
     {
 //        ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -189,6 +215,8 @@ public class Tweet {
         //new Tweet().searchTweets("banana");
         tweet.stream("#bit2_poker");
         //tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
+        //tweet.getMentions();
+        //tweet.getReplies(855381751207575552L);
     }
 
 }

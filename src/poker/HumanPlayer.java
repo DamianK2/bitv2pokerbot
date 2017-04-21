@@ -34,7 +34,7 @@ public class HumanPlayer extends PokerPlayer {
 		}
 
 		this.game.clearGameMessage();
-
+		
 
     	do {
         	discardCards = this.scanner.nextLine();
