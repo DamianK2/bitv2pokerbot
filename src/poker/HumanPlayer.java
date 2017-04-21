@@ -79,11 +79,8 @@ public class HumanPlayer extends PokerPlayer {
     			check = true;
     		
     	} while(!check);
-    	
-    	if(response == 1) 
-    		return true;
-    	else
-    		return false;
+
+		return response == 1;
     }
 
 

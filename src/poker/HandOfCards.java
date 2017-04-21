@@ -13,7 +13,7 @@ public class HandOfCards {
 	public static final int ROYAL_FLUSH_DEFAULT = 900000000, STRAIGHT_FLUSH_DEFAULT = 800000000, FOUR_OF_KIND_DEFAULT = 700000000, FULL_HOUSE_DEFAULT = 600000000, FLUSH_DEFAULT = 500000000, STRAIGHT_DEFAULT = 400000000, THREE_OF_KIND_DEFAULT = 300000000, TWO_PAIR_DEFAULT = 200000000, ONE_PAIR_DEFAULT = 100000000, HIGH_HAND_DEFAULT = 10000000;
 	private PlayingCard hand[] = new PlayingCard[SIZE];	// create player's hand
 	private DeckOfCards deck;							// could be used later for a reference to the deck object we created
-	private int discardProbability, brokenCardPos;
+	private int brokenCardPos;
 
 	// fetches 5 cards from the deck upon creation of HandOfCards object and places them into an array, then sorts that array
 	HandOfCards(DeckOfCards deckRef) {
@@ -188,10 +188,7 @@ public class HandOfCards {
 			check = false;
 		else if(this.isThreeOfAKind())
 			check = false;
-		else if(this.isTwoPair())
-			check = false;
-		else
-			check = true;
+		else check = !this.isTwoPair();
 		return check;
 	}
 
@@ -275,7 +272,7 @@ public class HandOfCards {
 	
 
 	public int getDiscardProbability(int cardPosition) {
-		discardProbability = 0;							// 0 by default
+		int discardProbability = 0;
 		if(cardPosition >= 0 && cardPosition < HandOfCards.SIZE) {
 			if(this.isRoyalFlush() || this.isStraightFlush() || this.isFourOfAKind() || this.isFullHouse());
 			else if(this.isBrokenFlush()) {
@@ -295,11 +292,11 @@ public class HandOfCards {
 			}
 			else if(this.isTwoPair()) {
 				// this allows us to improve to a full house
-				if(!this.checkForPair(cardPosition))
+				if(this.checkForPair(cardPosition))
 					discardProbability = 9;				// moderate probability due to the card not being in two pair
 			}
 			else if(this.isOnePair()) {
-				if(!this.checkForPair(cardPosition))
+				if(this.checkForPair(cardPosition))
 					discardProbability = 29;				// high probability because we can get a three of a kind if we discard 1 card, which will bring us to the three of a kind probability calculator
 			}
 			else if(this.isHighHand()) {
@@ -352,13 +349,10 @@ public class HandOfCards {
 
 	// if it is not a straight then it is a broken straight due to our previous checks in getDiscardProbabilty
 	private boolean isBrokenStraight() {
-		boolean check = false;;
+		boolean check = false;
 		if(this.isStraight())
 			check = false;
-		else if(this.isThreeOfAKind() || this.isTwoPair() || this.isOnePair())
-			check = false;
-		else
-			check = true;
+		else check = !(this.isThreeOfAKind() || this.isTwoPair() || this.isOnePair());
 		return check;
 	}
 
@@ -371,10 +365,8 @@ public class HandOfCards {
 			check = false;
 		else if (cardPos < HandOfCards.SIZE && cardPos >= 2 && hand[cardPos].getGameValue() == hand[cardPos-2].getGameValue() -2 && hand[cardPos-1].getGameValue() - 1 == hand[cardPos].getGameValue())
 			check = false;
-		else if (cardPos < HandOfCards.SIZE - 2 && hand[cardPos+1].getGameValue() + 1 == hand[cardPos+2].getGameValue() + 2)
-			check = false;
 		else
-			check = true;
+			check = !(cardPos < HandOfCards.SIZE - 2 && hand[cardPos + 1].getGameValue() + 1 == hand[cardPos + 2].getGameValue() + 2);
 		return check;
 	}
 
@@ -396,7 +388,7 @@ public class HandOfCards {
 		if(cardPos < HandOfCards.SIZE - 1 && hand[cardPos].getGameValue() == hand[cardPos+1].getGameValue() ||
 				(cardPos > HandOfCards.SIZE - 5 && hand[cardPos].getGameValue() == hand[cardPos-1].getGameValue()))
 			check = true;
-		return check;
+		return !check;
 	}
 
 	public void discard(int[] cardPositions)

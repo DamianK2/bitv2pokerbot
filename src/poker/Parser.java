@@ -29,11 +29,8 @@ public class Parser {
     
     public boolean checkAmountDiscards(String response) {
     	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
-        
-    	if(strArray.length > 3)
-    		return false;
-    	else 
-    		return true;
+
+        return strArray.length <= 3;
     }
     
     public boolean checkDiscardNumbers(String response) {
