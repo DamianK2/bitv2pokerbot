@@ -26,7 +26,16 @@ public class HumanPlayer extends PokerPlayer {
     	int counter = 0;
     	boolean check = false;
     	String discardCards;
-        
+
+		try {
+			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+		} catch (TwitterException e) {
+			// DO SOMETHING
+		}
+
+		this.game.clearGameMessage();
+		
+
     	do {
         	discardCards = this.scanner.nextLine();
 
@@ -54,6 +63,15 @@ public class HumanPlayer extends PokerPlayer {
     }
     
     public boolean askFold(int currentBet) {
+
+    	try {
+			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+		} catch (TwitterException e) {
+    		// DO SOMETHING
+		}
+
+		this.game.clearGameMessage();
+
     	return this.getResponse();
     }
  

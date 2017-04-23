@@ -18,15 +18,16 @@ public class GameOfPoker {
     }
 
     public void updateGameMessage(String message) {
-        this.gameMessage += message;
+        System.out.println(message);
+        this.gameMessage += message + "\n";
     }
 
     public long getCurrentMessageId() {
-        return currentMessageId;
+        return this.currentMessageId;
     }
 
     public String getGameMessage() {
-        return gameMessage;
+        return this.gameMessage;
     }
 
     public void clearGameMessage() {
@@ -40,7 +41,7 @@ public class GameOfPoker {
         Scanner input = new Scanner(System.in);
         HumanPlayer humanPlayer = new HumanPlayer(deck, this, this.playerName);
 
-        this.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...\n");
+        this.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...");
 
         // MAKE HUMAN PLAYER, PASS A NAME
 
@@ -57,7 +58,7 @@ public class GameOfPoker {
 
             // Play one round
             RoundOfPoker round = new RoundOfPoker(players, deck);
-            round.play();
+            round.play(this);
 
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getCoinsBalance() == 0)
