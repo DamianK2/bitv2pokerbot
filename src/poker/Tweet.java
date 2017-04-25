@@ -4,9 +4,7 @@ import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.List;
 
 
@@ -19,18 +17,35 @@ public class Tweet {
 
     public Tweet()
     {
+        String[] keys = new String[4];
+        
+        try {
+            FileReader fileReader = new FileReader(new File("./secret.txt"));
+            BufferedReader br = new BufferedReader(fileReader);
 
-        String consumerKey = "OaARzvHyEtdpebYqRBr0R7fpn";
-        String consumerKeySecret = "eKsSm18Lq2aMyUfUDUxcLDTCPSIoTetjOeCN585VGdL3KuRS2D";
-        String accessToken = "851895473032105985-LwJFH6eqi80mfWeVbKE1G7HygV41Cc5";
-        String accessTokenSecret = "oBWIJSFZFRyglFLyq0rjuPrWACyQPhvzJ3wYUqkRxKTqs";
+
+            String line;
+            // if no more lines the readLine() returns null
+            int index = 0;
+
+            try {
+                while ((line = br.readLine()) != null) {
+                    keys[index] = line;
+                    index++;
+                }
+            } catch (IOException e) {
+                System.out.println("Couldn't find keys.");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Couldn't find keys.");
+        }
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(consumerKey)
-                .setOAuthConsumerSecret(consumerKeySecret)
-                .setOAuthAccessToken(accessToken)
-                .setOAuthAccessTokenSecret(accessTokenSecret);
+                .setOAuthConsumerKey(keys[0])
+                .setOAuthConsumerSecret(keys[1])
+                .setOAuthAccessToken(keys[2])
+                .setOAuthAccessTokenSecret(keys[3]);
         this.build = cb.build();
         TwitterFactory tf = new TwitterFactory(this.build);
         this.twitter = tf.getInstance();
