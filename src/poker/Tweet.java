@@ -47,28 +47,36 @@ public class Tweet {
         // Split messages that are too long into 140 characters only
         boolean fullMessage = false;
         String tempMessage = message;
+        Status status = null;
+        int nameLength = name.length();
+        int availableMessageLength = 140 - nameLength - 1;
 
         do {
 
-            if (message.length() > 140) {
-                message = message.substring(0, 140);
+            if (message.length() > availableMessageLength) {
+                message = message.substring(0, availableMessageLength);
                 //message = message.substring(130);
-                tempMessage = tempMessage.substring(140);
+                tempMessage = tempMessage.substring(availableMessageLength);
             }
             else
                 fullMessage = true;
 
+
+
+            System.out.println("Nadupczylo petle");
             Twitter twitter = this.twitter;
-            StatusUpdate statusUpdate = new StatusUpdate(message);
+            StatusUpdate statusUpdate = new StatusUpdate(name + "\n" + message);
             statusUpdate.setInReplyToStatusId(messageId);
             try {
-                twitter.updateStatus(statusUpdate);
+                status = twitter.updateStatus(statusUpdate);
             } catch (TwitterException e) {
                 System.out.println("Something went wrong while posting tweet");
             }
 
             message = tempMessage;
         } while (!fullMessage);
+
+        System.out.println("Last reply ID: " + status.getId());
 
     }
 
@@ -216,7 +224,7 @@ public class Tweet {
         tweet.stream("#bit2_poker");
         //tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
         //tweet.getMentions();
-        //tweet.getReplies(855381751207575552L);
+        //tweet.getReplies(856914103268515840L);
     }
 
 }

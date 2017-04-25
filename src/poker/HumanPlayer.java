@@ -31,10 +31,11 @@ public class HumanPlayer extends PokerPlayer {
 			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
 		} catch (TwitterException e) {
 			// DO SOMETHING
+			System.out.println("Something went wrong while posting tweet Ask discard");
 		}
 
 		this.game.clearGameMessage();
-		
+
 
     	do {
         	discardCards = this.scanner.nextLine();
@@ -68,6 +69,7 @@ public class HumanPlayer extends PokerPlayer {
 			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
 		} catch (TwitterException e) {
     		// DO SOMETHING
+			System.out.println("Something went wrong while posting tweet Ask fold");
 		}
 
 		this.game.clearGameMessage();
