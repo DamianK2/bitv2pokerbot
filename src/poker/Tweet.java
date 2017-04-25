@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Tweet {
 
+    public static final int TWEET_CHARACTER_LIMIT = 140;
+    public static final String BOT_NAME = "bit2_poker";
     private Twitter twitter;
     private Configuration build;
 
@@ -44,12 +46,12 @@ public class Tweet {
     public long replyToTweet(String message, long messageId, String name) throws TwitterException
     {
 
-        // Split messages that are too long into 140 characters only
+        /* Always add user's name to the start of the tweet, so take away that amount of characters
+         * Split messages that are too long into 140 characters only */
         boolean fullMessage = false;
         String tempMessage = message;
         Status status = null;
-        int nameLength = name.length();
-        int availableMessageLength = 140 - nameLength - 1;
+        int availableMessageLength = TWEET_CHARACTER_LIMIT - name.length() - 1;
 
         do {
 
@@ -61,9 +63,6 @@ public class Tweet {
             else
                 fullMessage = true;
 
-
-
-            System.out.println("Nadupczylo petle");
             Twitter twitter = this.twitter;
             StatusUpdate statusUpdate = new StatusUpdate(name + "\n" + message);
             statusUpdate.setInReplyToStatusId(messageId);
@@ -88,8 +87,10 @@ public class Tweet {
     		if (replyToId == status.getInReplyToStatusId())
     			userReply = status.getText();
         }
-    	if(!userReply.equals(""))
-    		userReply = userReply.substring(12);
+
+        // Each reply has mentioned username in the front. Remove it with the space after the name and @ symbol in the front
+    	if (!userReply.equals(""))
+    		userReply = userReply.substring(BOT_NAME.length() + 2);
     	System.out.println("Returning: " + userReply);
     	
     	return userReply;
