@@ -88,6 +88,8 @@ public class Tweet {
     		if (replyToId == status.getInReplyToStatusId())
     			userReply = status.getText();
         }
+    	if(!userReply.equals(""))
+    		userReply = userReply.substring(12);
     	System.out.println("Returning: " + userReply);
     	
     	return userReply;
@@ -237,4 +239,5 @@ public class Tweet {
         //tweet.getReplies(856914103268515840L);
     }
 
+    
 }

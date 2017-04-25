@@ -73,7 +73,7 @@ public class HumanPlayer extends PokerPlayer {
         	
         	if(!check) {
         		try {
-        			Thread.sleep(60000);
+        			Thread.sleep(30000);
         		} catch (InterruptedException e) {
         			System.out.println("Something went wrong while posting tweet Ask discard");
         		}
