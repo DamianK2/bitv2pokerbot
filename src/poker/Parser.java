@@ -42,6 +42,8 @@ public class Parser {
     	for(int i = 0; i < strArray.length; i++) {
     		if(strArray[i].length() > 1)
     			return false;
+    		else if(strArray[i].equals(null) || strArray[i].equals("")) 
+    			return false;	
     		else if(strArray[i].charAt(0) < 48 || strArray[i].charAt(0) > 52)
 				return false;
 		}

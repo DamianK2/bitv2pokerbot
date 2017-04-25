@@ -41,7 +41,7 @@ public class Tweet {
         System.out.println("Successfully updated the status to [" + status.getText() + "].");
     }
 
-    public void replyToTweet(String message, long messageId, String name) throws TwitterException
+    public long replyToTweet(String message, long messageId, String name) throws TwitterException
     {
 
         // Split messages that are too long into 140 characters only
@@ -75,20 +75,30 @@ public class Tweet {
 
             message = tempMessage;
         } while (!fullMessage);
-
-        System.out.println("Last reply ID: " + status.getId());
-
+        
+        System.out.println("Last tweet ID: " + status.getId());
+	
+        return status.getId();
+    }
+    
+    public String getUserReply(long replyToId, String name) throws TwitterException {
+    	
+    	String userReply = "";
+    	for (Status status : this.getTimelineTweets(name)) {
+    		if (replyToId == status.getInReplyToStatusId())
+    			userReply = status.getText();
+        }
+    	System.out.println("Returning: " + userReply);
+    	
+    	return userReply;
     }
 
-    public void getTimelineTweets() throws TwitterException
+    public List<Status> getTimelineTweets(String name) throws TwitterException
     {
         Twitter twitter = this.twitter;
-        List<Status> statuses = twitter.getHomeTimeline();
-        System.out.println("Showing home timeline.");
-        for (Status status : statuses) {
-            System.out.println(status.getUser().getName() + ":" +
-                    status.getText());
-        }
+        Paging paging = new Paging(1, 20);
+        List<Status> statuses = twitter.getUserTimeline(name, paging);
+        return statuses;
     }
 
     // Be careful, this can exceed limit of tweets

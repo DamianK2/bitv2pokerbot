@@ -25,10 +25,11 @@ public class HumanPlayer extends PokerPlayer {
     {
     	int counter = 0;
     	boolean check = false;
-    	String discardCards;
+    	String discardCards = "";
+    	long lastTweetId = 0;
 
 		try {
-			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+			lastTweetId = this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
 		} catch (TwitterException e) {
 			// DO SOMETHING
 			System.out.println("Something went wrong while posting tweet Ask discard");
@@ -37,20 +38,49 @@ public class HumanPlayer extends PokerPlayer {
 		this.game.clearGameMessage();
 
 
-    	do {
-        	discardCards = this.scanner.nextLine();
-
+//    	do {
+//        	discardCards = this.scanner.nextLine();
+//
+//        	if(!this.parser.checkAmountDiscards(discardCards)) {
+//        		System.out.println("You can only discard a maximum of 3 cards.");
+//                System.out.println("Please type in the cards you would like to discard again.");	
+//        	}
+//        	else if(!this.parser.checkDiscardNumbers(discardCards)) {
+//        		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
+//        	}
+//        	else
+//        		check = true;	
+//        	
+//        } while(!check);
+		
+		do {
+			try {
+				discardCards = this.tweet.getUserReply(lastTweetId, this.name);
+			} catch (TwitterException e) {
+				// DO SOMETHING
+				System.out.println("Something went wrong while posting tweet Ask discard");
+			}
+			
         	if(!this.parser.checkAmountDiscards(discardCards)) {
-        		System.out.println("You can only discard a maximum of 3 cards.");
-                System.out.println("Please type in the cards you would like to discard again.");	
-        	}
-        	else if(!this.parser.checkDiscardNumbers(discardCards)) {
-        		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
-        	}
-        	else
-        		check = true;	
+	    		System.out.println("You can only discard a maximum of 3 cards.");
+	            System.out.println("Please type in the cards you would like to discard again.");	
+	    	}
+	    	else if(!this.parser.checkDiscardNumbers(discardCards)) {
+	    		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
+	    	}
+	    	else
+	    		check = true;
         	
-        } while(!check);
+        	if(!check) {
+        		try {
+        			Thread.sleep(60000);
+        		} catch (InterruptedException e) {
+        			System.out.println("Something went wrong while posting tweet Ask discard");
+        		}
+        	}
+        		
+        	
+		} while(!check);
         		
         int[] cards = this.parser.convertDiscards(discardCards);
        
