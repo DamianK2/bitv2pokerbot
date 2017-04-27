@@ -31,9 +31,9 @@ public class HumanPlayer extends PokerPlayer {
 		do {
 			
 			try {
-				System.out.println("*" + this.game.getGameMessage() + "*");
-				System.out.println("*" + this.game.getOriginalMessageId() + "*");
-				System.out.println("*" + this.name + "*");
+				//System.out.println("*" + this.game.getGameMessage() + "*");
+				//System.out.println("*" + this.game.getOriginalMessageId() + "*");
+				//System.out.println("*" + this.name + "*");
 				this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
 			} catch (TwitterException e) {
 				// DO SOMETHING
@@ -41,21 +41,24 @@ public class HumanPlayer extends PokerPlayer {
 			}
 
 			this.game.clearGameMessage();
+
+			// Wait until there is any response from user
+			do {
+				try {
+					discardCards = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
+				} catch (TwitterException e) {
+					// DO SOMETHING
+					System.out.println("Something went wrong while posting tweet Ask discard");
+				}
+			} while (discardCards.equals(""));
 			
-			try {
-				discardCards = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
-			} catch (TwitterException e) {
-				// DO SOMETHING
-				System.out.println("Something went wrong while posting tweet Ask discard");
-			}
-			
-        	if(!this.parser.checkAmountDiscards(discardCards)) {
+        	if (!this.parser.checkAmountDiscards(discardCards)) {
         		this.game.updateGameMessage("Warning number " + warning_count + "!");
         		this.game.updateGameMessage("You can only discard a maximum of 3 cards.");
         		this.game.updateGameMessage("Please type in the cards you would like to discard again.");
 
 	    	}
-	    	else if(!this.parser.checkDiscardNumbers(discardCards)) {
+	    	else if (!this.parser.checkDiscardNumbers(discardCards)) {
 	    		this.game.updateGameMessage("Warning number " + warning_count + "!");
 	    		this.game.updateGameMessage("You can only enter positions from 0 to 4 inclusive. Please try again.");
 	    	}
