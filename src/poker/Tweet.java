@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Tweet {
 
-    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 30000;
+    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 10000;
     public static final String BOT_NAME = "bit2_poker";
     private Twitter twitter;
     private Configuration build;

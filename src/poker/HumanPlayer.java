@@ -10,7 +10,7 @@ public class HumanPlayer extends PokerPlayer {
     private Parser parser;
     private Tweet tweet;
     private GameOfPoker game;
-    private static int warning_count = 0;
+    private static int warning_count = 1;
 
     public HumanPlayer(DeckOfCards deck, GameOfPoker game, String name) {
         super(deck);
@@ -128,6 +128,17 @@ public class HumanPlayer extends PokerPlayer {
     		return true;
     	else
     		return false;
+    }
+
+    public void tweetMessage() {
+        try {
+            this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
+        } catch (TwitterException e) {
+            // DO SOMETHING
+            System.out.println("Something went wrong while posting tweet message");
+        }
+
+        this.game.clearGameMessage();
     }
 
 

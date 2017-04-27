@@ -77,12 +77,13 @@ public class GameOfPoker {
             // Reset the game, to make sure that players have fresh cards
             this.resetGame(deck, players);
 
-            System.out.println("Would like to play another round of poker (y/n)");
+            this.updateGameMessage("Would like to play another round of poker (y/n)");
             playAgain = humanPlayer.getResponse();
 
         } while (players.contains(humanPlayer) && playAgain);
 
-        System.out.println("The game is over!");
+        this.updateGameMessage("The game is over! Thank you for playing with us.");
+        humanPlayer.tweetMessage();
 
     }
 
