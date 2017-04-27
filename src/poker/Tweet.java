@@ -111,9 +111,10 @@ public class Tweet {
         }
 
         // Each reply has mentioned username in the front. Remove it with the space after the name and @ symbol in the front
-    	if (!userReply.equals(""))
-    		userReply = userReply.substring(BOT_NAME.length() + 2);
-    	System.out.println("Returning: " + userReply);
+    	if (!userReply.equals("")) {
+            userReply = userReply.substring(BOT_NAME.length() + 2);
+            System.out.println("Returning: " + userReply);
+        }
     	
     	return userReply;
     }

@@ -31,9 +31,6 @@ public class HumanPlayer extends PokerPlayer {
 		do {
 			
 			try {
-				//System.out.println("*" + this.game.getGameMessage() + "*");
-				//System.out.println("*" + this.game.getOriginalMessageId() + "*");
-				//System.out.println("*" + this.name + "*");
 				this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
 			} catch (TwitterException e) {
 				// DO SOMETHING
@@ -80,15 +77,6 @@ public class HumanPlayer extends PokerPlayer {
     
     public boolean askFold(int currentBet) {
 
-    	try {
-			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name);
-		} catch (TwitterException e) {
-    		// DO SOMETHING
-			System.out.println("Something went wrong while posting tweet Ask fold");
-		}
-
-		this.game.clearGameMessage();
-
     	return this.getResponse();
     }
  
@@ -103,19 +91,40 @@ public class HumanPlayer extends PokerPlayer {
     public boolean getResponse() {
     	boolean check = false;
     	int response = -2;
-    	
+		String inputResponse = "";
+
     	do {
-    		String inputResponse = this.scanner.nextLine();
-    		response = this.parser.convertResponse(inputResponse);
-    		if(response == -1) {
-    			System.out.println("The acceptable answers are yes/no or y/n. Please try again");
-    		}
-    		else
-    			check = true;
-    		
-    	} while(!check);
+
+			try {
+				this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
+			} catch (TwitterException e) {
+				// DO SOMETHING
+				System.out.println("Something went wrong while posting tweet to ask for response");
+			}
+
+			this.game.clearGameMessage();
+
+			// Wait until there is any response from user
+			do {
+				try {
+					inputResponse = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
+				} catch (TwitterException e) {
+					// DO SOMETHING
+					System.out.println("Something went wrong while getting user response");
+				}
+			} while (inputResponse.equals(""));
+
+			response = this.parser.convertResponse(inputResponse);
+			if (response == -1) {
+				this.game.updateGameMessage("Warning number " + warning_count + "!");
+				game.updateGameMessage("The acceptable answers are yes/no or y/n. Please try again");
+				warning_count++;
+			}
+			else
+				check = true;
+		} while (!check);
     	
-    	if(response == 1) 
+    	if (response == 1)
     		return true;
     	else
     		return false;
