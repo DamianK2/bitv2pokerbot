@@ -26,10 +26,9 @@ public class HumanPlayer extends PokerPlayer {
     	int counter = 0;
     	boolean check = false;
     	String discardCards = "";
-    	long lastTweetId = 0;
 
 		try {
-			lastTweetId = this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+			this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
 		} catch (TwitterException e) {
 			// DO SOMETHING
 			System.out.println("Something went wrong while posting tweet Ask discard");
@@ -55,7 +54,7 @@ public class HumanPlayer extends PokerPlayer {
 		
 		do {
 			try {
-				discardCards = this.tweet.getUserReply(lastTweetId, this.name);
+				discardCards = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
 			} catch (TwitterException e) {
 				// DO SOMETHING
 				System.out.println("Something went wrong while posting tweet Ask discard");
@@ -69,18 +68,8 @@ public class HumanPlayer extends PokerPlayer {
 	    		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
 	    	}
 	    	else
-	    		check = true;
-        	
-        	if(!check) {
-        		try {
-        			Thread.sleep(30000);
-        		} catch (InterruptedException e) {
-        			System.out.println("Something went wrong while posting tweet Ask discard");
-        		}
-        	}
-        		
-        	
-		} while(!check);
+	    		check = true;      		
+        } while(!check);
         		
         int[] cards = this.parser.convertDiscards(discardCards);
        
@@ -96,7 +85,7 @@ public class HumanPlayer extends PokerPlayer {
     public boolean askFold(int currentBet) {
 
     	try {
-			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name);
 		} catch (TwitterException e) {
     		// DO SOMETHING
 			System.out.println("Something went wrong while posting tweet Ask fold");

@@ -8,6 +8,7 @@ public class GameOfPoker {
 
     public final static int COMPUTER_PLAYERS = 4;
     private String gameMessage;
+    private long originalMessageId;
     private long currentMessageId;
     private String playerName;
 
@@ -21,9 +22,17 @@ public class GameOfPoker {
         System.out.println(message);
         this.gameMessage += message + "\n";
     }
+    
+    public long getOriginalMessageId() {
+    	return this.originalMessageId;
+    }
 
     public long getCurrentMessageId() {
         return this.currentMessageId;
+    }
+    
+    public void updateCurrentMessageId(long lastTweetId) {
+    	this.currentMessageId = lastTweetId;
     }
 
     public String getGameMessage() {

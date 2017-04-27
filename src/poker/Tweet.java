@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Tweet {
 
-    public static final int TWEET_CHARACTER_LIMIT = 140;
+    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 30000;
     public static final String BOT_NAME = "bit2_poker";
     private Twitter twitter;
     private Configuration build;
@@ -98,6 +98,13 @@ public class Tweet {
     public String getUserReply(long replyToId, String name) throws TwitterException {
     	
     	String userReply = "";
+    	
+    	try {
+			Thread.sleep(Tweet.SLEEP_PERIOD);
+		} catch (InterruptedException e) {
+			System.out.println("Something went wrong while posting tweet Ask discard");
+		}
+    	
     	for (Status status : this.getTimelineTweets(name)) {
     		if (replyToId == status.getInReplyToStatusId())
     			userReply = status.getText();
