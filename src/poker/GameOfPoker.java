@@ -13,7 +13,7 @@ public class GameOfPoker {
     private String playerName;
 
     public GameOfPoker(long messageId, String name) {
-        this.currentMessageId = messageId;
+        this.originalMessageId = messageId;
         this.gameMessage = "";
         this.playerName = name;
     }

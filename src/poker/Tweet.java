@@ -58,7 +58,7 @@ public class Tweet {
         System.out.println("Successfully updated the status to [" + status.getText() + "].");
     }
 
-    public long replyToTweet(String message, long messageId, String name) throws TwitterException
+    public synchronized long replyToTweet(String message, long messageId, String name) throws TwitterException
     {
 
         /* Always add user's name to the start of the tweet, so take away that amount of characters

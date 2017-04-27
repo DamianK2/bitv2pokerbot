@@ -10,6 +10,7 @@ public class HumanPlayer extends PokerPlayer {
     private Parser parser;
     private Tweet tweet;
     private GameOfPoker game;
+    private static int warning_count = 0;
 
     public HumanPlayer(DeckOfCards deck, GameOfPoker game, String name) {
         super(deck);
@@ -27,32 +28,20 @@ public class HumanPlayer extends PokerPlayer {
     	boolean check = false;
     	String discardCards = "";
 
-		try {
-			this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
-		} catch (TwitterException e) {
-			// DO SOMETHING
-			System.out.println("Something went wrong while posting tweet Ask discard");
-		}
-
-		this.game.clearGameMessage();
-
-
-//    	do {
-//        	discardCards = this.scanner.nextLine();
-//
-//        	if(!this.parser.checkAmountDiscards(discardCards)) {
-//        		System.out.println("You can only discard a maximum of 3 cards.");
-//                System.out.println("Please type in the cards you would like to discard again.");	
-//        	}
-//        	else if(!this.parser.checkDiscardNumbers(discardCards)) {
-//        		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
-//        	}
-//        	else
-//        		check = true;	
-//        	
-//        } while(!check);
-		
 		do {
+			
+			try {
+				System.out.println("*" + this.game.getGameMessage() + "*");
+				System.out.println("*" + this.game.getOriginalMessageId() + "*");
+				System.out.println("*" + this.name + "*");
+				this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
+			} catch (TwitterException e) {
+				// DO SOMETHING
+				System.out.println("Something went wrong while posting tweet Ask discard");
+			}
+
+			this.game.clearGameMessage();
+			
 			try {
 				discardCards = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
 			} catch (TwitterException e) {
@@ -61,14 +50,18 @@ public class HumanPlayer extends PokerPlayer {
 			}
 			
         	if(!this.parser.checkAmountDiscards(discardCards)) {
-	    		System.out.println("You can only discard a maximum of 3 cards.");
-	            System.out.println("Please type in the cards you would like to discard again.");	
+        		this.game.updateGameMessage("Warning number " + warning_count + "!");
+        		this.game.updateGameMessage("You can only discard a maximum of 3 cards.");
+        		this.game.updateGameMessage("Please type in the cards you would like to discard again.");
+
 	    	}
 	    	else if(!this.parser.checkDiscardNumbers(discardCards)) {
-	    		System.out.println("You can only enter positions from 0 to 4 inclusive. Please try again.");
+	    		this.game.updateGameMessage("Warning number " + warning_count + "!");
+	    		this.game.updateGameMessage("You can only enter positions from 0 to 4 inclusive. Please try again.");
 	    	}
 	    	else
-	    		check = true;      		
+	    		check = true;  
+        	warning_count++;
         } while(!check);
         		
         int[] cards = this.parser.convertDiscards(discardCards);
