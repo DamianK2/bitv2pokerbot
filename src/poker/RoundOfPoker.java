@@ -296,12 +296,13 @@ public class RoundOfPoker {
 
     // HUMAN OPENING AND BETTING AMOUNT OF CHIP
     public int  roundBetting(int currentPlayer, int previousPlayer){
-        int bet = players.get(currentPlayer).betAmount();
-         while(players.get(currentPlayer).updatePlayerPot() + bet < players.get(previousPlayer).updatePlayerPot()) {
-             if (players.get(currentPlayer).isHuman)
-                 this.twitterInformation.updateGameMessage("Your bet is less than what's in the pot. Please match it or increase it");
-             bet = players.get(currentPlayer).betAmount();
-         }
+        int bet = 0;
+        if(players.get(currentPlayer).getCoinsBalance() > 0) {
+            bet = players.get(currentPlayer).betAmount();
+            while (players.get(currentPlayer).updatePlayerPot() + bet < players.get(previousPlayer).updatePlayerPot()) {
+                bet = players.get(currentPlayer).betAmount();
+            }
+        }
         return bet;
     }
 
