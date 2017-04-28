@@ -7,50 +7,21 @@ import java.util.Scanner;
 public class GameOfPoker {
 
     public final static int COMPUTER_PLAYERS = 4;
-    private String gameMessage;
-    private long originalMessageId;
-    private long currentMessageId;
-    private String playerName;
+    private TwitterInformation twitterInformation;
 
     public GameOfPoker(long messageId, String name) {
-        this.originalMessageId = messageId;
-        this.gameMessage = "";
-        this.playerName = name;
-    }
-
-    public void updateGameMessage(String message) {
-        System.out.println(message);
-        this.gameMessage += message + "\n";
+        this.twitterInformation = new TwitterInformation(messageId, name);
     }
     
-    public long getOriginalMessageId() {
-    	return this.originalMessageId;
-    }
-
-    public long getCurrentMessageId() {
-        return this.currentMessageId;
-    }
-    
-    public void updateCurrentMessageId(long lastTweetId) {
-    	this.currentMessageId = lastTweetId;
-    }
-
-    public String getGameMessage() {
-        return this.gameMessage;
-    }
-
-    public void clearGameMessage() {
-        this.gameMessage = "";
-    }
 
     public void playPoker() {
         DeckOfCards deck = new DeckOfCards();
         Parser parser = new Parser();
 
         Scanner input = new Scanner(System.in);
-        HumanPlayer humanPlayer = new HumanPlayer(deck, this, this.playerName);
+        HumanPlayer humanPlayer = new HumanPlayer(deck, this.twitterInformation, twitterInformation.getPlayerName());
 
-        this.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...");
+        twitterInformation.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...");
 
         // MAKE HUMAN PLAYER, PASS A NAME
 
@@ -66,8 +37,8 @@ public class GameOfPoker {
         do {
 
             // Play one round
-            RoundOfPoker round = new RoundOfPoker(players, deck);
-            round.play(this);
+            RoundOfPoker round = new RoundOfPoker(players, deck, this.twitterInformation);
+            round.play();
 
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getCoinsBalance() == 0)
@@ -77,12 +48,12 @@ public class GameOfPoker {
             // Reset the game, to make sure that players have fresh cards
             this.resetGame(deck, players);
 
-            this.updateGameMessage("Would like to play another round of poker (y/n)");
+            twitterInformation.updateGameMessage("Would like to play another round of poker (y/n)");
             playAgain = humanPlayer.getResponse();
 
         } while (players.contains(humanPlayer) && playAgain);
 
-        this.updateGameMessage("The game is over! Thank you for playing with us.");
+        twitterInformation.updateGameMessage("The game is over! Thank you for playing with us.");
         humanPlayer.tweetMessage();
 
     }
