@@ -160,8 +160,10 @@ public class PokerPlayer
 	{
 		this.hand = new HandOfCards(this.deck);
 	}
-	
-	
+
+	public int betAmount(){
+		return 1;
+	}
 	/*
 	 * For testing purposes, generate a random hand for the player and check his behaviour.
 	 */

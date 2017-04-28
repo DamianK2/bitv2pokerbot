@@ -88,7 +88,7 @@ public class RoundOfPoker {
 
 
         // BETTING
-        int checkOpen = 0, roundCounter = 0, currentPot = 0;
+        int checkOpen = 0, roundCounter = 0, currentPot = 0, previousPlayer = 0;
         boolean round = true, openingBetting = true, human = true, firstOpen = false;
 
         while (round) {
@@ -104,10 +104,12 @@ public class RoundOfPoker {
                                 this.twitterInformation.updateGameMessage("Would you like to open bet (y/n)? ");
                                firstOpen = players.get(i).askOpenBet(this.currentBet);
                                if(firstOpen){
-                                   this.currentBet = 1;
+                                   this.currentBet = roundBetting(i , previousPlayer);
+                                   previousPlayer = i;
                                    players.get(i).updateCoinsBalance(-this.currentBet);
                                    players.get(i).updateTableCoins(this.currentBet);
                                    currentPot += this.currentBet;
+
                                    human = false;
                                }
                             }
@@ -116,7 +118,8 @@ public class RoundOfPoker {
                         else if(players.get(i).canOpenBet() && !players.get(i).isHuman()){
                             firstOpen = players.get(i).askOpenBet(this.currentBet);
                             if(firstOpen){
-                                this.currentBet = 1;
+                                this.currentBet = roundBetting(i, previousPlayer);
+                                previousPlayer = i;
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
                             }
@@ -125,8 +128,14 @@ public class RoundOfPoker {
 
                     // CHECK IF THIS IS THE FIRST TIME OF OPENING AND PRINT THE OPENING STATEMENT
                     if (checkOpen == 0 && firstOpen) {
+                        if(players.get(i).isHuman)
+                            this.currentBet = roundBetting(i, previousPlayer);
+                        else
+                            this.currentBet = 1;
+
                         this.twitterInformation.updateGameMessage(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
                         currentPot += this.currentBet;
+                        previousPlayer = i;
                         checkOpen = 1;
                     }
                     // CHECK IF THE PLAYERS HAS ALREADY OPEN
@@ -144,6 +153,9 @@ public class RoundOfPoker {
 
                             // IF THE PLAYER SAID YES THEN RAISE BET
                             if (checkHuman) {
+                                this.twitterInformation.updateGameMessage("How much would you like to raise the bet (y/n)? ");
+                                this.currentBet = roundBetting(i, previousPlayer);
+                                previousPlayer = i;
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
                                 printRaiseStatement(i, this.currentBet);
@@ -280,6 +292,20 @@ public class RoundOfPoker {
         }
         return  checkActivePlayer;
     }
+
+
+    // HUMAN OPENING AND BETTING AMOUNT OF CHIP
+    public int  roundBetting(int currentPlayer, int previousPlayer){
+        int bet = players.get(currentPlayer).betAmount();
+         while(players.get(currentPlayer).updatePlayerPot() + bet < players.get(previousPlayer).updatePlayerPot()) {
+             if (players.get(currentPlayer).isHuman)
+                 this.twitterInformation.updateGameMessage("Your bet is less than what's in the pot. Please match it or increase it");
+             bet = players.get(currentPlayer).betAmount();
+         }
+        return bet;
+    }
+
+
 
 
     public static void main(String[] args) {
