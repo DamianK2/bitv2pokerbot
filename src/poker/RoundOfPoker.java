@@ -7,47 +7,49 @@ public class RoundOfPoker {
 
     private int currentBet;
     private ArrayList<PokerPlayer> players;
+    private TwitterInformation twitterInformation;
 
-    public RoundOfPoker(ArrayList<PokerPlayer> players, DeckOfCards deck)
+    public RoundOfPoker(ArrayList<PokerPlayer> players, DeckOfCards deck, TwitterInformation twitterInformation)
     {
         this.players = players;
         this.currentBet = 0;
+        this.twitterInformation = twitterInformation;
     }
 
-    public void play(GameOfPoker game)
+    public void play()
     {
 
         // START ROUND
-        game.updateGameMessage("New Deal:");
+        this.twitterInformation.updateGameMessage("New Deal:");
 
         for (PokerPlayer player : this.players)
-            game.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
+            this.twitterInformation.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
             if (player.canOpenBet()) {
-                game.updateGameMessage("> " + player.getName() + " says: I can open");
+                this.twitterInformation.updateGameMessage("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
             else
-                game.updateGameMessage("> " + player.getName() + " says: I cannot open");
+                this.twitterInformation.updateGameMessage("> " + player.getName() + " says: I cannot open");
 
         if (!canOpen) {
-            game.updateGameMessage("Sorry, we cannot open the game.");
+            this.twitterInformation.updateGameMessage("Sorry, we cannot open the game.");
             return;
         }
 
-        game.updateGameMessage("You have been dealt the following hand:");
+        this.twitterInformation.updateGameMessage("You have been dealt the following hand:");
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
         for (PokerPlayer player : this.players)
             if (player.isHuman())
-                game.updateGameMessage(player.getHand());
+                this.twitterInformation.updateGameMessage(player.getHand());
 
         // DISCARD
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
-                game.updateGameMessage(">> Which card(s) would you like to discard (e.g., 1,3): ");
+                this.twitterInformation.updateGameMessage(">> Which card(s) would you like to discard (e.g., 1,3): ");
                 player.askDiscard();
             }
         }
@@ -55,8 +57,8 @@ public class RoundOfPoker {
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
         for (PokerPlayer player : this.players)
             if (player.isHuman()) {
-                game.updateGameMessage("Your hand now looks like:");
-                game.updateGameMessage(player.getHand());
+                this.twitterInformation.updateGameMessage("Your hand now looks like:");
+                this.twitterInformation.updateGameMessage(player.getHand());
             }
 
         // ASK TO FOLD
@@ -65,7 +67,7 @@ public class RoundOfPoker {
         for (int i = 0; i < players.size(); i++) {
 
             if (players.get(i).isHuman()) {
-                game.updateGameMessage(">> Would you like to fold (y/n)? ");
+                this.twitterInformation.updateGameMessage(">> Would you like to fold (y/n)? ");
             }
             fold[i] = players.get(i).askFold(this.currentBet);
             if(!fold[i])
@@ -74,13 +76,13 @@ public class RoundOfPoker {
         // SHOW DISCARDING STATS
         for (PokerPlayer player : this.players)
             if (!player.isHuman())
-                game.updateGameMessage(player.getName() + " discards " + player.discard() + " card(s)");
+                this.twitterInformation.updateGameMessage(player.getName() + " discards " + player.discard() + " card(s)");
 
         System.out.println("");
 
         // IF EVERY PLAYER FOLD THEN EXIT ROUND OF POKER
         if (!allFold) {
-            game.updateGameMessage("sorry, all players fold in the round.");
+            this.twitterInformation.updateGameMessage("sorry, all players fold in the round.");
             return;
         }
 
@@ -99,7 +101,7 @@ public class RoundOfPoker {
                         if(players.get(i).isHuman()){
                             // CHECK IF THE HUMAN PLAYER IS THE FIRST PLAYER TO OPEN
                             if (players.get(i).canOpenBet() && !fold[i] && human && checkOpen == 0) {
-                                game.updateGameMessage("Would you like to open bet (y/n)? ");
+                                this.twitterInformation.updateGameMessage("Would you like to open bet (y/n)? ");
                                firstOpen = players.get(i).askOpenBet(this.currentBet);
                                if(firstOpen){
                                    this.currentBet = 1;
@@ -123,7 +125,7 @@ public class RoundOfPoker {
 
                     // CHECK IF THIS IS THE FIRST TIME OF OPENING AND PRINT THE OPENING STATEMENT
                     if (checkOpen == 0 && firstOpen) {
-                        game.updateGameMessage(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
+                        this.twitterInformation.updateGameMessage(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
                         currentPot += this.currentBet;
                         checkOpen = 1;
                     }
@@ -135,23 +137,23 @@ public class RoundOfPoker {
                             if(checkActive(fold) == 1)
                                 break;
 
-                            printSeenStatement(currentPot, i, game);
+                            printSeenStatement(currentPot, i);
 
-                            game.updateGameMessage("Would you like to raise (y/n)? ");
+                            this.twitterInformation.updateGameMessage("Would you like to raise (y/n)? ");
                             boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
 
                             // IF THE PLAYER SAID YES THEN RAISE BET
                             if (checkHuman) {
                                 players.get(i).updateCoinsBalance(-this.currentBet);
                                 players.get(i).updateTableCoins(this.currentBet);
-                                printRaiseStatement(i, this.currentBet, game);
+                                printRaiseStatement(i, this.currentBet);
                                 currentPot += this.currentBet;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkHuman ) {
                                //System.out.println("Would you like to fold (y/n)? ");
                                 fold[i] = true;
-                                game.updateGameMessage(players.get(i).getName() + " says: I fold ");
+                                this.twitterInformation.updateGameMessage(players.get(i).getName() + " says: I fold ");
                             }
                         }
                         // CHECK IF THE PLAYER IS A COMPUTER PLAYER AND ASK THE PLAYER TO RAISE THE BET
@@ -168,14 +170,14 @@ public class RoundOfPoker {
                                 if(checkActive(fold) == 1)
                                     break;
 
-                                printSeenStatement(currentPot, i, game);
-                                printRaiseStatement(i, this.currentBet, game);
+                                printSeenStatement(currentPot, i);
+                                printRaiseStatement(i, this.currentBet);
                                 currentPot += this.currentBet;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkComputer) {
                                 fold[i] = true;
-                                game.updateGameMessage(players.get(i).getName() + " says: I  fold ");
+                                this.twitterInformation.updateGameMessage(players.get(i).getName() + " says: I  fold ");
                             }
                         }
                     }
@@ -189,14 +191,14 @@ public class RoundOfPoker {
 
             // CHECK IF THE GAME ROUND OF POKER IS FINNISH AND ANNOUNCE WINNER AND RESET THE POT
             if(roundCounter == 2){
-                winner(fold, currentPot, game);
+                winner(fold, currentPot);
                 currentPot = 0;
                 resetPlayerPot();
                 round = false;
             }
             //CHECK IF THERe'S ONLY ONE PLAYER LEFT IN THE GAME AND ANNOUNCE WINNER AND RESET THE POT
             else if(checkActive(fold) == 1){
-                winner(fold, currentPot, game);
+                winner(fold, currentPot);
                 currentPot = 0;
                 resetPlayerPot();
                 round = false;
@@ -207,16 +209,16 @@ public class RoundOfPoker {
     }
 
     // A METHOD THAT CHECKS WHICH PLAYER IS THE WINNER AND DISPLAY PLAYERS HAND
-    public void winner(boolean fold[], int currentPot, GameOfPoker game) {
+    public void winner(boolean fold[], int currentPot) {
         // CHECK FOR WINNER
         int winnings = currentPot;
         int winnerPos = 0, cardGameValue = 0;
         for (int i = 0; i < players.size(); i++) {
             if (i ==  0 ) {
                // players.get(i).updateTableCoins(-this.currentBet);
-                game.updateGameMessage(players.get(i).getName() + " goes first");
-                game.updateGameMessage(players.get(i).getHand());
-                if(players.get(i).getHandValue() > cardGameValue && !fold[i]) {
+                this.twitterInformation.updateGameMessage(players.get(i).getName() + " goes first");
+                this.twitterInformation.updateGameMessage(players.get(i).getHand());
+                if (players.get(i).getHandValue() > cardGameValue && !fold[i]) {
                     cardGameValue = players.get(i).getHandValue();
                     winnerPos = i;
                 }
@@ -224,15 +226,15 @@ public class RoundOfPoker {
             else {
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]){
                    // players.get(i).updateTableCoins(-this.currentBet);
-                    game.updateGameMessage(players.get(i).getName() + " says 'read them and weep'");
-                    game.updateGameMessage(players.get(i).getHand());
+                    this.twitterInformation.updateGameMessage(players.get(i).getName() + " says 'read them and weep'");
+                    this.twitterInformation.updateGameMessage(players.get(i).getHand());
                     cardGameValue = players.get(i).getHandValue();
                     winnerPos = i;
                 }
                 else{
                     //players.get(i).updateTableCoins(-this.currentBet);
-                    game.updateGameMessage(players.get(i).getName() + " says 'read them and weep'");
-                    game.updateGameMessage(players.get(i).getHand());
+                    this.twitterInformation.updateGameMessage(players.get(i).getName() + " says 'read them and weep'");
+                    this.twitterInformation.updateGameMessage(players.get(i).getHand());
                 }
 
             }
@@ -241,13 +243,13 @@ public class RoundOfPoker {
         // PRINT WINNER
         if(winnings > 0) {
             players.get(winnerPos).updateCoinsBalance(winnings);
-            game.updateGameMessage(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
-            game.updateGameMessage(players.get(winnerPos).getHand());
-            game.updateGameMessage(players.get(winnerPos).getName() + " has " +
+            this.twitterInformation.updateGameMessage(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
+            this.twitterInformation.updateGameMessage(players.get(winnerPos).getHand());
+            this.twitterInformation.updateGameMessage(players.get(winnerPos).getName() + " has " +
                     players.get(winnerPos).getCoinsBalance()  + " chip(s) in the bank");
         }
         else
-            game.updateGameMessage("No winner because none of the players can open the bet");
+            this.twitterInformation.updateGameMessage("No winner because none of the players can open the bet");
 
     }
 
@@ -259,13 +261,13 @@ public class RoundOfPoker {
     }
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
-    public void printSeenStatement(int currentPot, int i, GameOfPoker game){
-        game.updateGameMessage(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
+    public void printSeenStatement(int currentPot, int i){
+        this.twitterInformation.updateGameMessage(players.get(i).getName() + " says: I see that " + currentPot + " chip!");
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
-    public void printRaiseStatement(int i, int current, GameOfPoker game){
-        game.updateGameMessage(players.get(i).getName() + " says: I raise " + current + " chip!");
+    public void printRaiseStatement(int i, int current){
+        this.twitterInformation.updateGameMessage(players.get(i).getName() + " says: I raise " + current + " chip!");
     }
 
     // CHECK THE NUMBER OF PLAYER STILL IN THE GAME

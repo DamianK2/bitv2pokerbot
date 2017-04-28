@@ -9,16 +9,16 @@ public class HumanPlayer extends PokerPlayer {
     private Scanner scanner;
     private Parser parser;
     private Tweet tweet;
-    private GameOfPoker game;
+    private TwitterInformation twitterInformation;
     private static int warning_count = 1;
 
-    public HumanPlayer(DeckOfCards deck, GameOfPoker game, String name) {
+    public HumanPlayer(DeckOfCards deck, TwitterInformation twitterInformation, String name) {
         super(deck);
         this.isHuman = true;
         this.scanner = new Scanner(System.in);
         this.parser = new Parser();
         this.tweet = new Tweet();
-        this.game = game;
+        this.twitterInformation = twitterInformation;
         this.name = name;
     }
 
@@ -31,18 +31,18 @@ public class HumanPlayer extends PokerPlayer {
 		do {
 			
 			try {
-				this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
+				this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
 			} catch (TwitterException e) {
 				// DO SOMETHING
 				System.out.println("Something went wrong while posting tweet Ask discard");
 			}
 
-			this.game.clearGameMessage();
+			this.twitterInformation.clearGameMessage();
 
 			// Wait until there is any response from user
 			do {
 				try {
-					discardCards = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
+					discardCards = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
 				} catch (TwitterException e) {
 					// DO SOMETHING
 					System.out.println("Something went wrong while posting tweet Ask discard");
@@ -50,14 +50,14 @@ public class HumanPlayer extends PokerPlayer {
 			} while (discardCards.equals(""));
 			
         	if (!this.parser.checkAmountDiscards(discardCards)) {
-        		this.game.updateGameMessage("Warning number " + warning_count + "!");
-        		this.game.updateGameMessage("You can only discard a maximum of 3 cards.");
-        		this.game.updateGameMessage("Please type in the cards you would like to discard again.");
+        		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+        		this.twitterInformation.updateGameMessage("You can only discard a maximum of 3 cards.");
+        		this.twitterInformation.updateGameMessage("Please type in the cards you would like to discard again.");
 
 	    	}
 	    	else if (!this.parser.checkDiscardNumbers(discardCards)) {
-	    		this.game.updateGameMessage("Warning number " + warning_count + "!");
-	    		this.game.updateGameMessage("You can only enter positions from 0 to 4 inclusive. Please try again.");
+	    		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive. Please try again.");
 	    	}
 	    	else
 	    		check = true;  
@@ -96,18 +96,18 @@ public class HumanPlayer extends PokerPlayer {
     	do {
 
 			try {
-				this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
+				this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
 			} catch (TwitterException e) {
 				// DO SOMETHING
 				System.out.println("Something went wrong while posting tweet to ask for response");
 			}
 
-			this.game.clearGameMessage();
+			this.twitterInformation.clearGameMessage();
 
 			// Wait until there is any response from user
 			do {
 				try {
-					inputResponse = this.tweet.getUserReply(this.game.getCurrentMessageId(), this.name);
+					inputResponse = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
 				} catch (TwitterException e) {
 					// DO SOMETHING
 					System.out.println("Something went wrong while getting user response");
@@ -116,8 +116,8 @@ public class HumanPlayer extends PokerPlayer {
 
 			response = this.parser.convertResponse(inputResponse);
 			if (response == -1) {
-				this.game.updateGameMessage("Warning number " + warning_count + "!");
-				game.updateGameMessage("The acceptable answers are yes/no or y/n. Please try again");
+				this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+				this.twitterInformation.updateGameMessage("The acceptable answers are yes/no or y/n. Please try again");
 				warning_count++;
 			}
 			else
@@ -132,13 +132,13 @@ public class HumanPlayer extends PokerPlayer {
 
     public void tweetMessage() {
         try {
-            this.game.updateCurrentMessageId(this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getOriginalMessageId(), this.name));
+            this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
         } catch (TwitterException e) {
             // DO SOMETHING
             System.out.println("Something went wrong while posting tweet message");
         }
 
-        this.game.clearGameMessage();
+        this.twitterInformation.clearGameMessage();
     }
 
 
