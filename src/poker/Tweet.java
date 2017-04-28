@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Tweet {
 
-    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 10000;
+    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 10000, NEXT_LINE_CHARACTER = 1;
     public static final String BOT_NAME = "bit2_poker";
     private Twitter twitter;
     private Configuration build;
@@ -63,31 +63,45 @@ public class Tweet {
 
         /* Always add user's name to the start of the tweet, so take away that amount of characters
          * Split messages that are too long into 140 characters only */
-        boolean fullMessage = false;
-        String tempMessage = message;
+        boolean fullMessage = false, haveMessage = false;
+        String twitterMessage;
         Status status = null;
-        int availableMessageLength = TWEET_CHARACTER_LIMIT - name.length() - 1;
+        int availableMessageLength, string_position = 0;
+        availableMessageLength = TWEET_CHARACTER_LIMIT - name.length() - 1;
+        String messages[] = message.split("\\r?\\n");
 
         do {
-
-            if (message.length() > availableMessageLength) {
-                message = message.substring(0, availableMessageLength);
-                //message = message.substring(130);
-                tempMessage = tempMessage.substring(availableMessageLength);
-            }
-            else
-                fullMessage = true;
-
-            Twitter twitter = this.twitter;
-            StatusUpdate statusUpdate = new StatusUpdate(name + "\n" + message);
-            statusUpdate.setInReplyToStatusId(messageId);
-            try {
-                status = twitter.updateStatus(statusUpdate);
-            } catch (TwitterException e) {
-                System.out.println("Something went wrong while posting tweet");
-            }
-
-            message = tempMessage;
+        	availableMessageLength = TWEET_CHARACTER_LIMIT - name.length() - 1;
+         	twitterMessage = "";
+         	haveMessage = false;
+         	
+         	do {
+         		if (string_position != messages.length) {
+	             	if (messages[string_position].length()+NEXT_LINE_CHARACTER <= availableMessageLength) {
+	             		twitterMessage += messages[string_position] + "\n";
+	         			availableMessageLength -= messages[string_position].length()+NEXT_LINE_CHARACTER;
+	         			string_position++;
+	             	}
+	             	else 
+	             		haveMessage = true;
+         		}
+             	else {
+             		haveMessage = true;
+             		fullMessage = true;
+             	}
+             	
+            } while (!haveMessage);
+         	
+         	if (!twitterMessage.equals("")) {
+         		 Twitter twitter = this.twitter;
+                 StatusUpdate statusUpdate = new StatusUpdate(name + "\n" + twitterMessage);
+                 statusUpdate.setInReplyToStatusId(messageId);
+                 try {
+                     status = twitter.updateStatus(statusUpdate);
+                 } catch (TwitterException e) {
+                     System.out.println("Something went wrong while posting tweet");
+                 }
+         	}
         } while (!fullMessage);
         
         System.out.println("Last tweet ID: " + status.getId());
@@ -260,8 +274,6 @@ public class Tweet {
         tweet.stream("#bit2_poker");
         //tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
         //tweet.getMentions();
-        //tweet.getReplies(856914103268515840L);
+        //tweet.getReplies(856914103268515840L);   	
     }
-
-    
 }
