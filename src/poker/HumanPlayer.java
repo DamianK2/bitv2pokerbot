@@ -116,13 +116,8 @@ public class HumanPlayer extends PokerPlayer {
 
 			response = this.parser.convertResponse(inputResponse);
 			if (response == -1) {
-<<<<<<< HEAD
-				this.game.updateGameMessage("Warning number " + warning_count + "!");
-				game.updateGameMessage("The acceptable answers are yes/no or y/n. Please try again");
-=======
 				this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
 				this.twitterInformation.updateGameMessage("The acceptable answers are yes/no or y/n. Please try again");
->>>>>>> origin/twitter
 				warning_count++;
 			}
 			else
