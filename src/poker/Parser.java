@@ -66,14 +66,6 @@ public class Parser {
         return discard;
     }
 
-    // CHECK IF PLAYER PLACE IN THE CORRECT VALUE OF THE BET
-    public boolean bettingAmount(String bet){
-        if(bet.matches("[0-9]+"))
-            return true;
-        else
-            return false;
-    }
-
     public static void main(String[] args){
         Parser parser = new Parser();
         Scanner input = new Scanner(System.in);
