@@ -304,13 +304,13 @@ public class HandOfCards {
 					discardProbability = 73;				
 			}
 			else if(this.isHighHand()) {
-				// the last card is always the worst so it is a definite discard, lowers down with the card number
+				// the bot will discard a max of 3 of its weakest cards.
 				if(cardPosition == 4)
 					discardProbability = 100;
 				else if(cardPosition == 3)
-					discardProbability = 0;
+					discardProbability = 100;
 				else if(cardPosition == 2)
-					discardProbability = 0;
+					discardProbability = 100;
 				else if(cardPosition == 1)
 					discardProbability = 0;
 				else if(cardPosition == 0)
