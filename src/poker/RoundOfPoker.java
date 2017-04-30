@@ -16,7 +16,7 @@ public class RoundOfPoker {
         this.twitterInformation = twitterInformation;
     }
 
-    public void play()
+    public int play()
     {
 
         // START ROUND
@@ -37,7 +37,7 @@ public class RoundOfPoker {
 
         if (!canOpen) {
             this.twitterInformation.updateGameMessage("> Sorry, we cannot open the game.");
-            return;
+            return PokerPlayer.TRUE;
         }
 
         this.twitterInformation.updateGameMessage("> You have been dealt the following hand:");
@@ -50,7 +50,9 @@ public class RoundOfPoker {
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
                 this.twitterInformation.updateGameMessage("> Which card(s) would you like to discard (e.g. 1,3 or 1 3 or none): ");
-                player.askDiscard();
+                // CHECK IF PLAYER WANTS TO EXIT THE GAME
+                if(player.askDiscard() == PokerPlayer.EXIT_GAME)
+                	return PokerPlayer.EXIT_GAME;
             }
         }
 
@@ -69,7 +71,14 @@ public class RoundOfPoker {
             if (players.get(i).isHuman()) {
                 this.twitterInformation.updateGameMessage("> Would you like to fold (y/n)? ");
             }
-            fold[i] = players.get(i).askFold(this.currentBet);
+            // CHECK IF PLAYER WANTS TO EXIT THE GAME
+            if(players.get(i).askFold(this.currentBet) == PokerPlayer.TRUE)
+            	fold[i] = true;
+            else if(players.get(i).askFold(this.currentBet) == PokerPlayer.FALSE)
+            	fold[i] = false;
+            else if(players.get(i).askFold(this.currentBet) == PokerPlayer.EXIT_GAME)
+            	return PokerPlayer.EXIT_GAME;
+            
             if(!fold[i])
                 allFold = true;
         }
@@ -83,7 +92,7 @@ public class RoundOfPoker {
         // IF EVERY PLAYER FOLD THEN EXIT ROUND OF POKER
         if (!allFold) {
             this.twitterInformation.updateGameMessage("> Sorry, all players fold in the round.");
-            return;
+            return PokerPlayer.TRUE;
         }
 
 
@@ -102,7 +111,14 @@ public class RoundOfPoker {
                             // CHECK IF THE HUMAN PLAYER IS THE FIRST PLAYER TO OPEN
                             if (players.get(i).canOpenBet() && !fold[i] && human && checkOpen == 0) {
                                 this.twitterInformation.updateGameMessage("> Would you like to open bet (y/n)? ");
-                               firstOpen = players.get(i).askOpenBet(this.currentBet);
+                                // CHECK IF PLAYER WANTS TO EXIT THE GAME
+                                if(players.get(i).askOpenBet(this.currentBet) == PokerPlayer.TRUE)
+                                	firstOpen = true;
+                                else if(players.get(i).askOpenBet(this.currentBet) == PokerPlayer.FALSE)
+                                	firstOpen = false;
+                                else if(players.get(i).askOpenBet(this.currentBet) == PokerPlayer.EXIT_GAME)
+                                	return PokerPlayer.EXIT_GAME;
+                               
                                if(firstOpen){
                                    this.currentBet = roundBetting(i, previousPlayer);
                                    previousPlayer = i;
@@ -115,7 +131,14 @@ public class RoundOfPoker {
                         }
                         // CHECK IF THE COMPUTER PLAYER IS THE FIRST PLAYER TO OPEN
                         else if(players.get(i).canOpenBet() && !players.get(i).isHuman()){
-                            firstOpen = players.get(i).askOpenBet(this.currentBet);
+                        	// CHECK IF PLAYER WANTS TO EXIT THE GAME
+                        	if(players.get(i).askOpenBet(this.currentBet) == PokerPlayer.TRUE)
+                            	firstOpen = true;
+                            else if(players.get(i).askOpenBet(this.currentBet) == PokerPlayer.FALSE)
+                            	firstOpen = false;
+                            else if(players.get(i).askOpenBet(this.currentBet) == PokerPlayer.EXIT_GAME)
+                            	return PokerPlayer.EXIT_GAME;
+                        	
                             if(firstOpen){
                                 this.currentBet = 1;
                                 players.get(i).updateCoinsBalance(-this.currentBet);
@@ -144,9 +167,16 @@ public class RoundOfPoker {
                                 this.twitterInformation.updateGameMessage("> Would you like to raise (y/n)? ");
                             else
                                 this.twitterInformation.updateGameMessage("> Would you like to raise again (y/n)? ");
-
-                            boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
-
+                            
+                            boolean checkHuman = false;
+                            // CHECK IF PLAYER WANTS TO EXIT THE GAME
+                            if(players.get(i).askRaiseBet(this.currentBet) == PokerPlayer.TRUE)
+                            	checkHuman = true;
+                            else if(players.get(i).askRaiseBet(this.currentBet) == PokerPlayer.FALSE)
+                            	checkHuman = false;
+                            else if(players.get(i).askRaiseBet(this.currentBet) == PokerPlayer.EXIT_GAME)
+                            	return PokerPlayer.EXIT_GAME;
+                             
                             // IF THE PLAYER SAID YES THEN RAISE BET
                             if (checkHuman) {
                                 if(raise == 0)
@@ -171,7 +201,15 @@ public class RoundOfPoker {
                         }
                         // CHECK IF THE PLAYER IS A COMPUTER PLAYER AND ASK THE PLAYER TO RAISE THE BET
                         else {
-                            boolean checkComputer = players.get(i).askRaiseBet(this.currentBet);
+                            boolean checkComputer = false;
+                            // CHECK IF PLAYER WANTS TO EXIT THE GAME
+                            if(players.get(i).askRaiseBet(this.currentBet) == PokerPlayer.TRUE)
+                            	checkComputer = true;
+                            else if(players.get(i).askRaiseBet(this.currentBet) == PokerPlayer.FALSE)
+                            	checkComputer = false;
+                            else if(players.get(i).askRaiseBet(this.currentBet) == PokerPlayer.EXIT_GAME)
+                            	return PokerPlayer.EXIT_GAME;
+                            
                             // IF THE PLAYER COIN BALANCE IS ZERO REMOVE THE PLAYER FROM THE GAME
                             if(checkActive(fold) == 1)
                                 break;;
@@ -218,7 +256,8 @@ public class RoundOfPoker {
             }
 
         }
-
+        
+        return PokerPlayer.TRUE;
     }
 
     // A METHOD THAT CHECKS WHICH PLAYER IS THE WINNER AND DISPLAY PLAYERS HAND
