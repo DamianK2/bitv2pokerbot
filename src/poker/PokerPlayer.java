@@ -147,7 +147,7 @@ public class PokerPlayer
 		String cards = "";
 
 		for (int i = 0; i < HandOfCards.SIZE; i++)
-			cards += i + ": " + this.hand.getCardAt(i).toString() + "\n";
+			cards += i + ": " + this.hand.getCardAt(i).toString() + " ";
 
 		return cards;
 	}

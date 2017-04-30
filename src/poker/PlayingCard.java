@@ -42,9 +42,25 @@ public class PlayingCard {
 		return this.gameValue;
 	}
 	
-	public String toString()
+	public String toString() 
 	{
-		return cardType + cardSuit;
+		String card = "";
+		switch(this.cardSuit) {
+			case PlayingCard.SPADES:
+				card = this.cardType + (char)'\u2660';
+				break;
+			case PlayingCard.HEARTS:
+				card = this.cardType + (char)'\u2665';
+				break;
+			case PlayingCard.DIAMONDS:
+				card = this.cardType + (char)'\u2666';
+				break;
+			case PlayingCard.CLUBS:
+				card = this.cardType + (char)'\u2663';
+				break;
+		}
+		
+		return card;
 	}
 	
 	public static void main(String[] args) {
