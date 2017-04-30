@@ -23,17 +23,17 @@ public class RoundOfPoker {
         this.twitterInformation.updateGameMessage("New Deal:");
 
         for (PokerPlayer player : this.players)
-            this.twitterInformation.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins");
+            this.twitterInformation.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " chips");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
             if (player.canOpenBet()) {
-                this.twitterInformation.updateGameMessage("> " + player.getName() + " says: I can open");
+                this.twitterInformation.updateGameMessage("> " + player.getName() + " can open");
                 canOpen = true;
             }
             else
-                this.twitterInformation.updateGameMessage("> " + player.getName() + " says: I cannot open");
+                this.twitterInformation.updateGameMessage("> " + player.getName() + " can't open");
 
         if (!canOpen) {
             this.twitterInformation.updateGameMessage("> Sorry, we cannot open the game.");
