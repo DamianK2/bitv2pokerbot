@@ -124,6 +124,12 @@ public class HumanPlayer extends PokerPlayer {
                  this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
                  warning_count++;
              }
+             else if(Integer.parseInt(bet) > this.getCoinsBalance()){
+                 this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+                 this.twitterInformation.updateGameMessage("You have " + this.getCoinsBalance() + " in the bank");
+                 this.twitterInformation.updateGameMessage("Please enter that chip(s) that less than or equal to " + this.getCoinsBalance());
+                 warning_count++;
+             }
              else
                  check = true;
              
