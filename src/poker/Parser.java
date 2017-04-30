@@ -61,10 +61,17 @@ public class Parser {
 
     // CHECK IF PLAYER PLACE IN THE CORRECT VALUE OF THE BET
     public boolean bettingAmount(String bet){
-        if(bet.matches("[0-9]+"))
+        if (bet.matches("[0-9]+"))
             return true;
         else
             return false;
+    }
+    
+    public boolean checkDealMeOut(String response) {
+    	if (response.matches(".*#bit2_poker_DealMeOut.*"))
+    		return true;
+    	else 
+    		return false;
     }
 
 
@@ -81,6 +88,10 @@ public class Parser {
         int discards[] = parser.convertDiscards(discard);
         for(int i = 0; i < discards.length; i++)
             System.out.println(discards[i]);
+        
+        
+        System.out.println("Test regex");
+        System.out.println("big 685/-0'/#bit2_poker_DealMeOut 579**-*'#[ banana".matches(".*#bit2_poker_DealMeOut.*"));
 
 
 
