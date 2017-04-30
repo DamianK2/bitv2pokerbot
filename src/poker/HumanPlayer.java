@@ -1,12 +1,9 @@
 package poker;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 
-import java.util.Scanner;
+import twitter4j.TwitterException;
 
 public class HumanPlayer extends PokerPlayer {
 
-    private Scanner scanner;
     private Parser parser;
     private Tweet tweet;
     private TwitterInformation twitterInformation;
@@ -15,7 +12,6 @@ public class HumanPlayer extends PokerPlayer {
     public HumanPlayer(DeckOfCards deck, TwitterInformation twitterInformation, String name) {
         super(deck);
         this.isHuman = true;
-        this.scanner = new Scanner(System.in);
         this.parser = new Parser();
         this.tweet = new Tweet();
         this.twitterInformation = twitterInformation;
@@ -49,28 +45,36 @@ public class HumanPlayer extends PokerPlayer {
 				}
 			} while (discardCards.equals(""));
 			
-        	if (!this.parser.checkAmountDiscards(discardCards)) {
+			if(discardCards.equalsIgnoreCase("none")) {
+				check = true;
+			}
+			else if (!this.parser.checkAmountDiscards(discardCards)) {
         		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
         		this.twitterInformation.updateGameMessage("You can only discard a maximum of 3 cards.");
         		this.twitterInformation.updateGameMessage("Please type in the cards you would like to discard again.");
+        		warning_count++;
 
 	    	}
 	    	else if (!this.parser.checkDiscardNumbers(discardCards)) {
 	    		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
-	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive. Please try again.");
+	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive OR \"none\".");
+	    		this.twitterInformation.updateGameMessage("Please type in the cards you would like to discard again.");
+	    		warning_count++;
 	    	}
 	    	else
 	    		check = true;  
-        	warning_count++;
+        	
         } while(!check);
-        		
-        int[] cards = this.parser.convertDiscards(discardCards);
-       
-        for (int element : cards)
-            if (element != -1)
-                counter++;
+        
+		if(!discardCards.equalsIgnoreCase("none")) {
+			int[] cards = this.parser.convertDiscards(discardCards);
+		       
+	        for (int element : cards)
+	            if (element != -1)
+	                counter++;
 
-        this.hand.discard(cards);      
+	        this.hand.discard(cards);
+		}     
         
         return counter;
     }
@@ -87,6 +91,48 @@ public class HumanPlayer extends PokerPlayer {
     public boolean askRaiseBet(int currentBet) {
     	return this.getResponse();
 	}
+    
+    // CHECK THE PLAYER BET AND RETURN IT
+ 	public int betAmount() {
+         int num_betting = 0;
+         boolean check = false;
+         String bet = "";
+
+         do {
+
+             try {
+                 this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
+             } catch (TwitterException e) {
+                 // DO SOMETHING
+                 System.out.println("Something went wrong while posting tweet Ask discard");
+             }
+
+             this.twitterInformation.clearGameMessage();
+
+             // Wait until there is any response from user
+             do {
+                 try {
+                     bet = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
+                 } catch (TwitterException e) {
+                     // DO SOMETHING
+                     System.out.println("Something went wrong while posting tweet Ask discard");
+                 }
+             } while (bet.equals(""));
+
+             if (!this.parser.bettingAmount(bet)) {
+                 this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+                 this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
+                 warning_count++;
+             }
+             else
+                 check = true;
+             
+         } while(!check);
+
+         num_betting = Integer.parseInt(bet);
+
+         return num_betting;
+ 	}
     
     public boolean getResponse() {
     	boolean check = false;
@@ -140,53 +186,4 @@ public class HumanPlayer extends PokerPlayer {
 
         this.twitterInformation.clearGameMessage();
     }
-
-	// CHECK THE PLAYER BET AND RETURN IT
-	public int betAmount() {
-        int num_betting = 0;
-        boolean check = false;
-        String bet = "";
-
-        do {
-
-            try {
-                this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
-            } catch (TwitterException e) {
-                // DO SOMETHING
-                System.out.println("Something went wrong while posting tweet Ask discard");
-            }
-
-            this.twitterInformation.clearGameMessage();
-
-            // Wait until there is any response from user
-            do {
-                try {
-                    bet = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
-                } catch (TwitterException e) {
-                    // DO SOMETHING
-                    System.out.println("Something went wrong while posting tweet Ask discard");
-                }
-            } while (bet.equals(""));
-
-			num_betting = Integer.parseInt(bet);
-
-            if (!this.parser.bettingAmount(bet)) {
-                this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
-                this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
-
-            }
-            else if(num_betting >  this.getCoinsBalance()){
-				this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
-            	this.twitterInformation.updateGameMessage("You only have " + this.getCoinsBalance() + " chip(s) in the bank");
-				this.twitterInformation.updateGameMessage("Please enter " + this.getCoinsBalance() + " or less");
-			}
-            else
-                check = true;
-            warning_count++;
-        } while(!check);
-
-        return num_betting;
-	}
-
-
 }

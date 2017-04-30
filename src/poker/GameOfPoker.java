@@ -4,7 +4,7 @@ package poker;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GameOfPoker {
+public class GameOfPoker extends Thread {
 
     public final static int COMPUTER_PLAYERS = 4;
     private TwitterInformation twitterInformation;
@@ -12,7 +12,10 @@ public class GameOfPoker {
     public GameOfPoker(long messageId, String name) {
         this.twitterInformation = new TwitterInformation(messageId, name);
     }
-    
+
+    public void run() {
+        this.playPoker();
+    }
 
     public void playPoker() {
         DeckOfCards deck = new DeckOfCards();

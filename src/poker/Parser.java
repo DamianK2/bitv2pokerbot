@@ -2,14 +2,7 @@ package poker;
 
 import java.util.Scanner;
 
-/**
- * Created by Adam Freeman on 05/04/2017.
- */
 public class Parser {
-	
-    Parser(){
-
-    }
 
     public int convertResponse(String response){
         String checkYes = "Yes";
