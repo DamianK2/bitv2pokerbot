@@ -57,7 +57,8 @@ public class HumanPlayer extends PokerPlayer {
 	    	}
 	    	else if (!this.parser.checkDiscardNumbers(discardCards)) {
 	    		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
-	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive OR \"none\" Please try again.");
+	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive OR \"none\".");
+	    		this.twitterInformation.updateGameMessage("Please type in the cards you would like to discard again.");
 	    		warning_count++;
 	    	}
 	    	else
