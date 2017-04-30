@@ -106,10 +106,8 @@ public class HumanPlayer extends PokerPlayer {
          String bet = "";
 
          do {
-
+			 // Tweet message
         	 this.tweetMessage();
-
-             this.twitterInformation.clearGameMessage();
 
              // Wait until there is any response from user
              do {
@@ -159,10 +157,8 @@ public class HumanPlayer extends PokerPlayer {
 		String userResponse = "";
 
     	do {
-
+			// Tweet message
     		this.tweetMessage();
-
-			this.twitterInformation.clearGameMessage();
 
 			// Wait until there is any response from user
 			do {
