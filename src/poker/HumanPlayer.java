@@ -168,17 +168,22 @@ public class HumanPlayer extends PokerPlayer {
                 }
             } while (bet.equals(""));
 
+			num_betting = Integer.parseInt(bet);
+
             if (!this.parser.bettingAmount(bet)) {
                 this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
                 this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
 
             }
+            else if(num_betting >  this.getCoinsBalance()){
+				this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+            	this.twitterInformation.updateGameMessage("You only have " + this.getCoinsBalance() + " chip(s) in the bank");
+				this.twitterInformation.updateGameMessage("Please enter " + this.getCoinsBalance() + " or less");
+			}
             else
                 check = true;
             warning_count++;
         } while(!check);
-
-        num_betting = Integer.parseInt(bet);
 
         return num_betting;
 	}
