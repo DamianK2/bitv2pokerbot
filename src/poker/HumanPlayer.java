@@ -45,28 +45,36 @@ public class HumanPlayer extends PokerPlayer {
 				}
 			} while (discardCards.equals(""));
 			
-        	if (!this.parser.checkAmountDiscards(discardCards)) {
+			if(discardCards.equalsIgnoreCase("none")) {
+				check = true;
+			}
+			else if (!this.parser.checkAmountDiscards(discardCards)) {
         		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
         		this.twitterInformation.updateGameMessage("You can only discard a maximum of 3 cards.");
         		this.twitterInformation.updateGameMessage("Please type in the cards you would like to discard again.");
+        		warning_count++;
 
 	    	}
 	    	else if (!this.parser.checkDiscardNumbers(discardCards)) {
 	    		this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
-	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive. Please try again.");
+	    		this.twitterInformation.updateGameMessage("You can only enter positions from 0 to 4 inclusive OR \"none\".");
+	    		this.twitterInformation.updateGameMessage("Please type in the cards you would like to discard again.");
+	    		warning_count++;
 	    	}
 	    	else
 	    		check = true;  
-        	warning_count++;
+        	
         } while(!check);
-        		
-        int[] cards = this.parser.convertDiscards(discardCards);
-       
-        for (int element : cards)
-            if (element != -1)
-                counter++;
+        
+		if(!discardCards.equalsIgnoreCase("none")) {
+			int[] cards = this.parser.convertDiscards(discardCards);
+		       
+	        for (int element : cards)
+	            if (element != -1)
+	                counter++;
 
-        this.hand.discard(cards);      
+	        this.hand.discard(cards);
+		}     
         
         return counter;
     }
@@ -114,11 +122,11 @@ public class HumanPlayer extends PokerPlayer {
              if (!this.parser.bettingAmount(bet)) {
                  this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
                  this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
-
+                 warning_count++;
              }
              else
                  check = true;
-             warning_count++;
+             
          } while(!check);
 
          num_betting = Integer.parseInt(bet);

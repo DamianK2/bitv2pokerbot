@@ -23,7 +23,7 @@ public class RoundOfPoker {
         this.twitterInformation.updateGameMessage("New Deal:");
 
         for (PokerPlayer player : this.players)
-            this.twitterInformation.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
+            this.twitterInformation.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
@@ -49,7 +49,7 @@ public class RoundOfPoker {
         // DISCARD
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
-                this.twitterInformation.updateGameMessage("> Which card(s) would you like to discard (e.g., 1,3): ");
+                this.twitterInformation.updateGameMessage("> Which card(s) would you like to discard (e.g. 1,3 or 1 3 or none): ");
                 player.askDiscard();
             }
         }
@@ -82,7 +82,7 @@ public class RoundOfPoker {
 
         // IF EVERY PLAYER FOLD THEN EXIT ROUND OF POKER
         if (!allFold) {
-            this.twitterInformation.updateGameMessage("> sorry, all players fold in the round.");
+            this.twitterInformation.updateGameMessage("> Sorry, all players fold in the round.");
             return;
         }
 
@@ -150,9 +150,9 @@ public class RoundOfPoker {
                             // IF THE PLAYER SAID YES THEN RAISE BET
                             if (checkHuman) {
                                 if(raise == 0)
-                                    this.twitterInformation.updateGameMessage("> How much would you like to raise the bet (y/n)? ");
+                                    this.twitterInformation.updateGameMessage("> How much would you like to raise the bet? ");
                                 else
-                                    this.twitterInformation.updateGameMessage("> How much would you like to raise the bet again (y/n)? ");
+                                    this.twitterInformation.updateGameMessage("> How much would you like to raise the bet again? ");
                                 raise = 1;
 
                                 this.currentBet = roundBetting(i, previousPlayer);
