@@ -300,6 +300,8 @@ public class RoundOfPoker {
         if(players.get(currentPlayer).getCoinsBalance() > 0) {
             bet = players.get(currentPlayer).betAmount();
             while (players.get(currentPlayer).updatePlayerPot() + bet < players.get(previousPlayer).updatePlayerPot()) {
+                this.twitterInformation.updateGameMessage("> Your input chip greater or equal " + (players.get(previousPlayer).updatePlayerPot() -
+                        players.get(currentPlayer).updatePlayerPot()) + " to match the pot");
                 bet = players.get(currentPlayer).betAmount();
             }
         }
