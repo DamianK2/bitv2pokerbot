@@ -141,5 +141,47 @@ public class HumanPlayer extends PokerPlayer {
         this.twitterInformation.clearGameMessage();
     }
 
+	// CHECK THE PLAYER BET AND RETURN IT
+	public int betAmount() {
+        int num_betting = 0;
+        boolean check = false;
+        String bet = "";
+
+        do {
+
+            try {
+                this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
+            } catch (TwitterException e) {
+                // DO SOMETHING
+                System.out.println("Something went wrong while posting tweet Ask discard");
+            }
+
+            this.twitterInformation.clearGameMessage();
+
+            // Wait until there is any response from user
+            do {
+                try {
+                    bet = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
+                } catch (TwitterException e) {
+                    // DO SOMETHING
+                    System.out.println("Something went wrong while posting tweet Ask discard");
+                }
+            } while (bet.equals(""));
+
+            if (!this.parser.bettingAmount(bet)) {
+                this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+                this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
+
+            }
+            else
+                check = true;
+            warning_count++;
+        } while(!check);
+
+        num_betting = Integer.parseInt(bet);
+
+        return num_betting;
+	}
+
 
 }
