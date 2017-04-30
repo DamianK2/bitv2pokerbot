@@ -1,12 +1,9 @@
 package poker;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 
-import java.util.Scanner;
+import twitter4j.TwitterException;
 
 public class HumanPlayer extends PokerPlayer {
 
-    private Scanner scanner;
     private Parser parser;
     private Tweet tweet;
     private TwitterInformation twitterInformation;
@@ -15,7 +12,6 @@ public class HumanPlayer extends PokerPlayer {
     public HumanPlayer(DeckOfCards deck, TwitterInformation twitterInformation, String name) {
         super(deck);
         this.isHuman = true;
-        this.scanner = new Scanner(System.in);
         this.parser = new Parser();
         this.tweet = new Tweet();
         this.twitterInformation = twitterInformation;
@@ -88,6 +84,48 @@ public class HumanPlayer extends PokerPlayer {
     	return this.getResponse();
 	}
     
+    // CHECK THE PLAYER BET AND RETURN IT
+ 	public int betAmount() {
+         int num_betting = 0;
+         boolean check = false;
+         String bet = "";
+
+         do {
+
+             try {
+                 this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
+             } catch (TwitterException e) {
+                 // DO SOMETHING
+                 System.out.println("Something went wrong while posting tweet Ask discard");
+             }
+
+             this.twitterInformation.clearGameMessage();
+
+             // Wait until there is any response from user
+             do {
+                 try {
+                     bet = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
+                 } catch (TwitterException e) {
+                     // DO SOMETHING
+                     System.out.println("Something went wrong while posting tweet Ask discard");
+                 }
+             } while (bet.equals(""));
+
+             if (!this.parser.bettingAmount(bet)) {
+                 this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
+                 this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
+
+             }
+             else
+                 check = true;
+             warning_count++;
+         } while(!check);
+
+         num_betting = Integer.parseInt(bet);
+
+         return num_betting;
+ 	}
+    
     public boolean getResponse() {
     	boolean check = false;
     	int response = -2;
@@ -140,48 +178,4 @@ public class HumanPlayer extends PokerPlayer {
 
         this.twitterInformation.clearGameMessage();
     }
-
-	// CHECK THE PLAYER BET AND RETURN IT
-	public int betAmount() {
-        int num_betting = 0;
-        boolean check = false;
-        String bet = "";
-
-        do {
-
-            try {
-                this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
-            } catch (TwitterException e) {
-                // DO SOMETHING
-                System.out.println("Something went wrong while posting tweet Ask discard");
-            }
-
-            this.twitterInformation.clearGameMessage();
-
-            // Wait until there is any response from user
-            do {
-                try {
-                    bet = this.tweet.getUserReply(this.twitterInformation.getCurrentMessageId(), this.name);
-                } catch (TwitterException e) {
-                    // DO SOMETHING
-                    System.out.println("Something went wrong while posting tweet Ask discard");
-                }
-            } while (bet.equals(""));
-
-            if (!this.parser.bettingAmount(bet)) {
-                this.twitterInformation.updateGameMessage("Warning number " + warning_count + "!");
-                this.twitterInformation.updateGameMessage("Incorrect Please type in a positive integer amount.");
-
-            }
-            else
-                check = true;
-            warning_count++;
-        } while(!check);
-
-        num_betting = Integer.parseInt(bet);
-
-        return num_betting;
-	}
-
-
 }
