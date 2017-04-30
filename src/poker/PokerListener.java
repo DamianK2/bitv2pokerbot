@@ -16,9 +16,8 @@ public class PokerListener implements StatusListener {
     public void onStatus(Status status) {
         System.out.println("ID: " + status.getId() + " @" + status.getUser().getScreenName() + " " + status.getText()); // print tweet text to console
 
-        this.games.add(this.gameIndex, new GameOfPoker(status.getId(), "@" + status.getUser().getScreenName()));
+        new GameOfPoker(status.getId(), "@" + status.getUser().getScreenName()).start();
         System.out.println("New game created with game index " + this.gameIndex);
-        this.games.get(this.gameIndex).start();
         this.gameIndex++;
 
 

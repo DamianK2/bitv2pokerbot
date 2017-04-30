@@ -98,11 +98,24 @@ public class Tweet {
          		 Twitter twitter = this.twitter;
                  StatusUpdate statusUpdate = new StatusUpdate(name + "\n" + twitterMessage);
                  statusUpdate.setInReplyToStatusId(messageId);
-                 try {
-                     status = twitter.updateStatus(statusUpdate);
-                 } catch (TwitterException e) {
-                     System.out.println("Something went wrong while posting tweet");
-                 }
+                 do {
+                     try {
+                         status = twitter.updateStatus(statusUpdate);
+                     } catch (TwitterException e) {
+                         System.out.println("Something went wrong while posting tweet");
+                         try {
+                             Thread.sleep(Tweet.SLEEP_PERIOD + Tweet.SLEEP_PERIOD);
+                         } catch (InterruptedException ex) {
+                             System.out.println("Interrupt exception from thread sleep statusUpdate");
+                         }
+                     }
+                 } while (status == null);
+
+                try {
+                    Thread.sleep(Tweet.SLEEP_PERIOD / 2);
+                } catch (InterruptedException ex) {
+                    System.out.println("Interrupt exception from thread sleep statusUpdate");
+                }
          	}
         } while (!fullMessage);
         
@@ -111,14 +124,14 @@ public class Tweet {
         return status.getId();
     }
     
-    public String getUserReply(long replyToId, String name) throws TwitterException {
+    public synchronized String getUserReply(long replyToId, String name) throws TwitterException {
     	
     	String userReply = "";
     	
     	try {
 			Thread.sleep(Tweet.SLEEP_PERIOD);
 		} catch (InterruptedException e) {
-			System.out.println("Something went wrong while posting tweet Ask discard");
+			System.out.println("Interrupt exception from thread sleep");
 		}
     	
     	for (Status status : this.getTimelineTweets(name)) {
@@ -135,7 +148,7 @@ public class Tweet {
     	return userReply;
     }
 
-    public List<Status> getTimelineTweets(String name) throws TwitterException
+    public synchronized List<Status> getTimelineTweets(String name) throws TwitterException
     {
         Twitter twitter = this.twitter;
         Paging paging = new Paging(1, 20);

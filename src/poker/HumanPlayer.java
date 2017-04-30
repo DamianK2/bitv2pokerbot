@@ -18,7 +18,7 @@ public class HumanPlayer extends PokerPlayer {
         this.name = name;
     }
 
-    public int askDiscard()
+    public synchronized int askDiscard()
     {
     	int counter = 0;
     	boolean check = false;
@@ -100,7 +100,7 @@ public class HumanPlayer extends PokerPlayer {
 	}
     
     // CHECK THE PLAYER BET AND RETURN IT
- 	public int betAmount() {
+ 	public synchronized int betAmount() {
          int num_betting = 0;
          boolean check = false;
          String bet = "";
@@ -151,7 +151,7 @@ public class HumanPlayer extends PokerPlayer {
          return num_betting;
  	}
     
-    public int getResponse() {
+    public synchronized int getResponse() {
     	boolean check = false;
     	int response = -2;
 		String userResponse = "";
@@ -198,7 +198,7 @@ public class HumanPlayer extends PokerPlayer {
     		return PokerPlayer.FALSE;
     }
     
-    public void tweetMessage() {
+    public synchronized void tweetMessage() {
         try {
             this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
         } catch (TwitterException e) {
