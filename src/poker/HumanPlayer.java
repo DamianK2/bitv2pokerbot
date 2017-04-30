@@ -48,8 +48,7 @@ public class HumanPlayer extends PokerPlayer {
 				this.tweetMessage();
 				System.out.println("Game ended.");
 				
-				// TODO
-				System.exit(0);
+				return PokerPlayer.EXIT_GAME;
 			} 
 			else {
 				if (discardCards.equalsIgnoreCase("none")) {
@@ -87,16 +86,16 @@ public class HumanPlayer extends PokerPlayer {
         return counter;
     }
     
-    public boolean askFold(int currentBet) {
+    public int askFold(int currentBet) {
 
     	return this.getResponse();
     }
  
-    public boolean askOpenBet(int currentBet) {
+    public int askOpenBet(int currentBet) {
     	return this.getResponse();
 	}
     
-    public boolean askRaiseBet(int currentBet) {
+    public int askRaiseBet(int currentBet) {
     	return this.getResponse();
 	}
     
@@ -130,8 +129,7 @@ public class HumanPlayer extends PokerPlayer {
  				this.tweetMessage();
 				System.out.println("Game ended.");
  				
-				// TODO
- 				System.exit(0);
+				return PokerPlayer.EXIT_GAME;
  			 }  
  			 else {
 	             if (!this.parser.bettingAmount(bet)) {
@@ -155,7 +153,7 @@ public class HumanPlayer extends PokerPlayer {
          return num_betting;
  	}
     
-    public boolean getResponse() {
+    public int getResponse() {
     	boolean check = false;
     	int response = -2;
 		String userResponse = "";
@@ -184,8 +182,7 @@ public class HumanPlayer extends PokerPlayer {
 				this.tweetMessage();
 				System.out.println("Game ended.");
 				
-				// TODO
-				System.exit(0);
+				return PokerPlayer.EXIT_GAME;
 			} 
 			else {
 				response = this.parser.convertResponse(userResponse);
@@ -200,9 +197,9 @@ public class HumanPlayer extends PokerPlayer {
 		} while (!check);
     	
     	if (response == 1)
-    		return true;
+    		return PokerPlayer.TRUE;
     	else
-    		return false;
+    		return PokerPlayer.FALSE;
     }
     
     public void tweetMessage() {
