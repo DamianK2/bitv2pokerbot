@@ -7,45 +7,21 @@ import java.util.Scanner;
 public class GameOfPoker {
 
     public final static int COMPUTER_PLAYERS = 4;
-    private String gameMessage;
-    private long currentMessageId;
-    private String playerName;
-
-    public GameOfPoker(long messageId, String name) {
-        this.currentMessageId = messageId;
-        this.gameMessage = "";
-        this.playerName = name;
-    }
-
-    public void updateGameMessage(String message) {
-        System.out.println(message);
-        this.gameMessage += message + "\n";
-    }
-
-    public long getCurrentMessageId() {
-        return this.currentMessageId;
-    }
-
-    public String getGameMessage() {
-        return this.gameMessage;
-    }
-
-    public void clearGameMessage() {
-        this.gameMessage = "";
-    }
 
     public void playPoker() {
         DeckOfCards deck = new DeckOfCards();
         Parser parser = new Parser();
 
         Scanner input = new Scanner(System.in);
-        HumanPlayer humanPlayer = new HumanPlayer(deck, this, this.playerName);
 
-        this.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...");
+        System.out.println("Welcome to the Automated Poker Machine ...");
+        System.out.print("What is your name? ");
+        String name = input.nextLine();
+        System.out.println("Let's play POKER ...");
 
         // MAKE HUMAN PLAYER, PASS A NAME
-
-        ArrayList<PokerPlayer> players = new ArrayList<>();
+        HumanPlayer humanPlayer = new HumanPlayer(deck, name);
+        ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
         players.add(humanPlayer);
 
         for (int i = 0; i <= COMPUTER_PLAYERS; i++)
@@ -58,7 +34,7 @@ public class GameOfPoker {
 
             // Play one round
             RoundOfPoker round = new RoundOfPoker(players, deck);
-            round.play(this);
+            round.play();
 
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getCoinsBalance() == 0)
@@ -88,7 +64,7 @@ public class GameOfPoker {
     }
 
     public static void main(String[] args) {
-        GameOfPoker game = new GameOfPoker(854669882297901056L, "Marcin");
+        GameOfPoker game = new GameOfPoker();
         game.playPoker();
     }
 }

@@ -29,19 +29,22 @@ public class Parser {
     
     public boolean checkAmountDiscards(String response) {
     	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
-
-        return strArray.length <= 3;
+        
+    	if(strArray.length > 3)
+    		return false;
+    	else 
+    		return true;
     }
     
     public boolean checkDiscardNumbers(String response) {
     	String [] strArray = response.split("\\s*(\\s|=>|,)\\s*");
-
-        for (String aStrArray : strArray) {
-            if (aStrArray.length() > 1)
-                return false;
-            else if (aStrArray.charAt(0) < 48 || aStrArray.charAt(0) > 52)
-                return false;
-        }
+    	
+    	for(int i = 0; i < strArray.length; i++) {
+    		if(strArray[i].length() > 1)
+    			return false;
+    		else if(strArray[i].charAt(0) < 48 || strArray[i].charAt(0) > 52)
+				return false;
+		}
     	
     	return true;
     }
@@ -72,7 +75,8 @@ public class Parser {
         System.out.println("Enter discard position");
         String discard = input.nextLine();
         int discards[] = parser.convertDiscards(discard);
-        for (int discard1 : discards) System.out.println(discard1);
+        for(int i = 0; i < discards.length; i++)
+            System.out.println(discards[i]);
 
 
 
