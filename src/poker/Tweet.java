@@ -98,6 +98,7 @@ public class Tweet {
          		 Twitter twitter = this.twitter;
                  StatusUpdate statusUpdate = new StatusUpdate(name + "\n" + twitterMessage);
                  statusUpdate.setInReplyToStatusId(messageId);
+                 status = null; // safety to make sure that status is reset
                  do {
                      try {
                          status = twitter.updateStatus(statusUpdate);
