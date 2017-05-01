@@ -15,14 +15,8 @@ public class Tweet {
     private Twitter twitter;
     private Configuration build;
 
-    public Tweet()
+    public Tweet(String consumerKey, String consumerKeySecret, String accessToken, String accessTokenSecret)
     {
-
-        String consumerKey = "OaARzvHyEtdpebYqRBr0R7fpn";
-        String consumerKeySecret = "eKsSm18Lq2aMyUfUDUxcLDTCPSIoTetjOeCN585VGdL3KuRS2D";
-        String accessToken = "851895473032105985-LwJFH6eqi80mfWeVbKE1G7HygV41Cc5";
-        String accessTokenSecret = "oBWIJSFZFRyglFLyq0rjuPrWACyQPhvzJ3wYUqkRxKTqs";
-
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey(consumerKey)
@@ -41,34 +35,16 @@ public class Tweet {
         System.out.println("Successfully updated the status to [" + status.getText() + "].");
     }
 
-    public void replyToTweet(String message, long messageId, String name) throws TwitterException
+    public void replyToTweet(String message, long messageId) throws TwitterException
     {
-
-        // Split messages that are too long into 140 characters only
-        boolean fullMessage = false;
-        String tempMessage = message;
-
-        do {
-
-            if (message.length() > 140) {
-                message = message.substring(0, 140);
-                //message = message.substring(130);
-                tempMessage = tempMessage.substring(140);
-            }
-            else
-                fullMessage = true;
-
-            Twitter twitter = this.twitter;
-            StatusUpdate statusUpdate = new StatusUpdate(message);
-            statusUpdate.setInReplyToStatusId(messageId);
-            try {
-                twitter.updateStatus(statusUpdate);
-            } catch (TwitterException e) {
-                System.out.println("Something went wrong while posting tweet");
-            }
-
-            message = tempMessage;
-        } while (!fullMessage);
+        Twitter twitter = this.twitter;
+        StatusUpdate statusUpdate = new StatusUpdate(message);
+        statusUpdate.setInReplyToStatusId(messageId);
+        try {
+            twitter.updateStatus(statusUpdate);
+        } catch (TwitterException e) {
+            System.out.println("Something went wrong while posting tweet");
+        }
 
     }
 
@@ -108,33 +84,7 @@ public class Tweet {
 
     }
 
-
-    public void getMentions()
-    {
-
-        try {
-            User user = twitter.showUser("bit2_poker");
-            List<Status> statuses = twitter.getMentionsTimeline();
-            System.out.println("Showing @" + user.getScreenName() + "'s mentions.");
-            for (Status status : statuses) {
-                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
-            }
-        } catch (TwitterException te) {
-            te.printStackTrace();
-            System.out.println("Failed to get timeline: " + te.getMessage());
-            System.exit(-1);
-        }
-    }
-
-    public void getReplies(long messageId) throws TwitterException
-    {
-        Status status = twitter.showStatus(messageId);
-        Status replyStatus = twitter.showStatus(status.getInReplyToStatusId());
-        System.out.println(replyStatus.getText());
-    }
-
-
-    public void stream(String keyword) throws TwitterException
+    public void stream(String[] keywords) throws TwitterException
     {
 //        ConfigurationBuilder cb = new ConfigurationBuilder();
 //        cb.setDebugEnabled(true)
@@ -151,11 +101,6 @@ public class Tweet {
         twitterStream.addListener(new StatusListener () {
             public void onStatus(Status status) {
                 System.out.println("ID: " + status.getId() + " @" + status.getUser().getScreenName() + " " + status.getText()); // print tweet text to console
-
-                // CREATE NEW POKER GAME
-                GameOfPoker game = new GameOfPoker(status.getId(), "@" + status.getUser().getScreenName());
-                game.playPoker();
-
             }
 
             @Override
@@ -186,15 +131,15 @@ public class Tweet {
         });
 
         FilterQuery tweetFilterQuery = new FilterQuery();
-        tweetFilterQuery.track(keyword);
-        //tweetFilterQuery.language(new String[]{"en"});
+        tweetFilterQuery.track(keywords);
+        tweetFilterQuery.language(new String[]{"en"});
 
         twitterStream.filter(tweetFilterQuery);
     }
 
     public static void main(String[] args) throws Exception
     {
-        /*FileReader fileReader = new FileReader(new File("./secret.txt"));
+        FileReader fileReader = new FileReader(new File("./secret.txt"));
         BufferedReader br = new BufferedReader(fileReader);
 
         String line;
@@ -206,17 +151,14 @@ public class Tweet {
             index++;
         }
 
-        Tweet tweet = new Tweet(keys[0], keys[1], keys[2], keys[3]);*/
+        Tweet tweet = new Tweet(keys[0], keys[1], keys[2], keys[3]);
         //tweet.stream(new String[]{"bit2_poker"});
 
-        Tweet tweet = new Tweet();
         //tweet.post("Hello World!");
         //new Tweet().getTimelineTweets();
         //new Tweet().searchTweets("banana");
-        tweet.stream("#bit2_poker");
-        //tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
-        //tweet.getMentions();
-        //tweet.getReplies(855381751207575552L);
+        //new Tweet().stream();
+        tweet.replyToTweet("Reply to a tweet", 854669882297901056L);
     }
 
 }
