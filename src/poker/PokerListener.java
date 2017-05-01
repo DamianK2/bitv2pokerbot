@@ -13,16 +13,30 @@ public class PokerListener implements StatusListener {
         this.games = new ArrayList<>();
     }
 
-    public void onStatus(Status status) {
+    public synchronized void onStatus(Status status) {
         System.out.println("ID: " + status.getId() + " @" + status.getUser().getScreenName() + " " + status.getText()); // print tweet text to console
 
-        new GameOfPoker(status.getId(), "@" + status.getUser().getScreenName()).start();
-        System.out.println("New game created with game index " + this.gameIndex);
-        this.gameIndex++;
+        // Process manager, check if thread is alive and remove if not.
+        for (GameOfPoker game : this.games)
+            if (!game.isAlive()) {
+                this.games.remove(game);
+                this.gameIndex--;
+            }
 
+        if (this.games.size() < Tweet.GAMES_LIMIT) {
+            this.games.add(gameIndex, new GameOfPoker(status.getId(), "@" + status.getUser().getScreenName()));
+            System.out.println("New game created with game index " + this.gameIndex);
+            this.games.get(gameIndex).start();
+            this.gameIndex++;
+        } else
+            System.out.println("The limit of games has been reached.");
 
+        // Thread testing only
+        int j = 0;
+        for (GameOfPoker game : this.games)
+            System.out.println(j + " " + game.isAlive());
 
-        }
+    }
 
         @Override
         public void onException(Exception e) {
