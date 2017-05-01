@@ -15,6 +15,7 @@ public class Tweet {
     public static final String BOT_NAME = "bit2_poker";
     private Twitter twitter;
     private Configuration build;
+    private static int tweet_repetition = 1;
 
     public Tweet()
     {
@@ -104,6 +105,8 @@ public class Tweet {
                          status = twitter.updateStatus(statusUpdate);
                      } catch (TwitterException e) {
                          System.out.println("Something went wrong while posting tweet");
+                         twitterMessage += tweet_repetition;
+                         tweet_repetition++;
                          try {
                              Thread.sleep(Tweet.SLEEP_PERIOD + Tweet.SLEEP_PERIOD);
                          } catch (InterruptedException ex) {
