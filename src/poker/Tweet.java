@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Tweet {
 
-    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 10000, NEXT_LINE_CHARACTER = 1, GAMES_LIMIT = 10;
+    public static final int TWEET_CHARACTER_LIMIT = 140, SLEEP_PERIOD = 10000, NEXT_LINE_CHARACTER = 1, GAMES_LIMIT = 50;
     public static final String BOT_NAME = "bit2_poker";
     private Twitter twitter;
     private Configuration build;
