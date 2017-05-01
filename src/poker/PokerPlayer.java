@@ -15,7 +15,7 @@ public class PokerPlayer
 	protected String name;
 	protected boolean isHuman;
 	private int pot = 0;
-	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, PLAYER_STARTING_COINS = 10, TABLE_STARTING_COINS = 0;
+	public static final int DISCARD_MAX = 3, MAX_PROBABILITY = 100, PLAYER_STARTING_COINS = 10, TABLE_STARTING_COINS = 0, TRUE = 1, FALSE = 0, EXIT_GAME = -1;;
 	
 	
 	public PokerPlayer(DeckOfCards deck)
@@ -107,25 +107,25 @@ public class PokerPlayer
 			return true;
 	}
 	
-	public boolean askFold(int currentBet) {
+	public int askFold(int currentBet) {
 		if(hand.isHighHand())
-			return true;
+			return PokerPlayer.TRUE;
 		else
-			return false;
+			return PokerPlayer.FALSE;
 	}
 	
-	public boolean askOpenBet(int currentBet) {
+	public int askOpenBet(int currentBet) {
 		if(hand.isHighHand())
-			return false;
+			return PokerPlayer.FALSE;
 		else
-			return true;
+			return PokerPlayer.TRUE;
 	}
 	
-	public boolean askRaiseBet(int currentBet) {
+	public int askRaiseBet(int currentBet) {
 		if(hand.isTwoPair() || hand.isOnePair() || hand.isHighHand())
-			return false;
+			return PokerPlayer.FALSE;
 		else
-			return true;
+			return PokerPlayer.TRUE;
 	}
 	
 	public int askDiscard() {
@@ -147,7 +147,7 @@ public class PokerPlayer
 		String cards = "";
 
 		for (int i = 0; i < HandOfCards.SIZE; i++)
-			cards += i + ": " + this.hand.getCardAt(i).toString() + "\n";
+			cards += i + ": " + this.hand.getCardAt(i).toString() + " ";
 
 		return cards;
 	}
@@ -160,8 +160,11 @@ public class PokerPlayer
 	{
 		this.hand = new HandOfCards(this.deck);
 	}
-	
-	
+
+	public int betAmount(){ return 1;}
+
+
+
 	/*
 	 * For testing purposes, generate a random hand for the player and check his behaviour.
 	 */

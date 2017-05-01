@@ -271,7 +271,8 @@ public class HandOfCards {
 	/*We got the odds for different probabilities of outcomes after discarding a card improving a hand the user currently holds from 'https://rip94550.wordpress.com/2011/03/21/draw-poker-%E2%80%93-improving-the-hand/'
 	 * We converted the odds to percentage using this website: 'http://www.calculatorsoup.com/calculators/games/odds.php'
 	 * For some methods By default discardProbability is zero. In some methods value returned is 100 as for example in high hand if no 4 flush or broken
-	 * straight are there, discarding the weakest card is best option.*/
+	 * straight are there, discarding the weakest card is best option. Discard prob value was multiplied by a weight(x2.5) as the probabilities are too low compared to
+	 * the random num we used(1-100) since they were all multiplied by the same weight they are still the same proportion. */
 	
 
 	public int getDiscardProbability(int cardPosition) {
@@ -280,36 +281,36 @@ public class HandOfCards {
 			if(this.isRoyalFlush() || this.isStraightFlush() || this.isFourOfAKind() || this.isFullHouse());
 			else if(this.isBrokenFlush()) {
 				if(cardPosition == brokenCardPos) {
-					discardProbability = 20;
+					discardProbability = 45;
 				}
 				// otherwise discardProbability is 0 by default
 			}
 			else if(this.isBrokenStraight()){
 				if(this.isBrokenCardStraight(cardPosition))
-					discardProbability = 19;
+					discardProbability = 48;
 			}
 			else if(this.isThreeOfAKind()) {
 				// this allows us to improve to a four of a kind or a full house
 				if(!this.checkForThreeCards(cardPosition))
-					discardProbability = 10;				// high probability due to the card not being in the three of a kind
+					discardProbability = 25;				
 			}
 			else if(this.isTwoPair()) {
 				// this allows us to improve to a full house
 				if(!this.checkForPair(cardPosition))
-					discardProbability = 9;				// moderate probability due to the card not being in two pair
+					discardProbability = 23;				
 			}
 			else if(this.isOnePair()) {
 				if(!this.checkForPair(cardPosition))
-					discardProbability = 29;				// high probability because we can get a three of a kind if we discard 1 card, which will bring us to the three of a kind probability calculator
+					discardProbability = 73;				
 			}
 			else if(this.isHighHand()) {
-				// the last card is always the worst so it is a definite discard, lowers down with the card number
+				// the bot will discard a max of 3 of its weakest cards.
 				if(cardPosition == 4)
 					discardProbability = 100;
 				else if(cardPosition == 3)
-					discardProbability = 0;
+					discardProbability = 100;
 				else if(cardPosition == 2)
-					discardProbability = 0;
+					discardProbability = 100;
 				else if(cardPosition == 1)
 					discardProbability = 0;
 				else if(cardPosition == 0)

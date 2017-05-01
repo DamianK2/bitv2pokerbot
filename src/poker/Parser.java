@@ -2,14 +2,7 @@ package poker;
 
 import java.util.Scanner;
 
-/**
- * Created by Adam Freeman on 05/04/2017.
- */
 public class Parser {
-	
-    Parser(){
-
-    }
 
     public int convertResponse(String response){
         String checkYes = "Yes";
@@ -42,6 +35,8 @@ public class Parser {
     	for(int i = 0; i < strArray.length; i++) {
     		if(strArray[i].length() > 1)
     			return false;
+    		else if(strArray[i].equals(null) || strArray[i].equals("")) 
+    			return false;	
     		else if(strArray[i].charAt(0) < 48 || strArray[i].charAt(0) > 52)
 				return false;
 		}
@@ -64,6 +59,22 @@ public class Parser {
         return discard;
     }
 
+    // CHECK IF PLAYER PLACE IN THE CORRECT VALUE OF THE BET
+    public boolean bettingAmount(String bet){
+        if (bet.matches("[0-9]+"))
+            return true;
+        else
+            return false;
+    }
+    
+    public boolean checkDealMeOut(String response) {
+    	if (response.matches(".*#bit2_poker_DealMeOut.*"))
+    		return true;
+    	else 
+    		return false;
+    }
+
+
     public static void main(String[] args){
         Parser parser = new Parser();
         Scanner input = new Scanner(System.in);
@@ -77,6 +88,10 @@ public class Parser {
         int discards[] = parser.convertDiscards(discard);
         for(int i = 0; i < discards.length; i++)
             System.out.println(discards[i]);
+        
+        
+        System.out.println("Test regex");
+        System.out.println("big 685/-0'/#bit2_poker_DealMeOut 579**-*'#[ banana".matches(".*#bit2_poker_DealMeOut.*"));
 
 
 

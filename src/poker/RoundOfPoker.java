@@ -285,15 +285,13 @@ public class RoundOfPoker {
 
         Scanner input = new Scanner(System.in);
 
-
-
         System.out.println("Welcome to the Automated Poker Machine ...");
         System.out.print("What is your name? ");
         String name = input.nextLine();
         System.out.println("Let's play POKER ...");
 
         // MAKE HUMAN PLAYER, PASS A NAME
-        HumanPlayer humanPlayer = new HumanPlayer(deck);
+        HumanPlayer humanPlayer = new HumanPlayer(deck, name);
         ComputerPlayer p1 = new ComputerPlayer(deck);
         ComputerPlayer p2 = new ComputerPlayer(deck);
         ComputerPlayer p3 = new ComputerPlayer(deck);
@@ -329,4 +327,3 @@ public class RoundOfPoker {
         //System.out.println(round.players.get(0).name);
     }
 }
-
