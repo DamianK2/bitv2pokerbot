@@ -1,17 +1,24 @@
 package poker;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+
 import java.util.Scanner;
 
 public class HumanPlayer extends PokerPlayer {
 
     private Scanner scanner;
     private Parser parser;
+    private Tweet tweet;
+    private GameOfPoker game;
 
-    public HumanPlayer(DeckOfCards deck, String name) {
+    public HumanPlayer(DeckOfCards deck, GameOfPoker game, String name) {
         super(deck);
-        this.name = name;
         this.isHuman = true;
         this.scanner = new Scanner(System.in);
         this.parser = new Parser();
+        this.tweet = new Tweet();
+        this.game = game;
+        this.name = name;
     }
 
     public int askDiscard()
@@ -19,7 +26,16 @@ public class HumanPlayer extends PokerPlayer {
     	int counter = 0;
     	boolean check = false;
     	String discardCards;
-        
+
+		try {
+			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+		} catch (TwitterException e) {
+			// DO SOMETHING
+		}
+
+		this.game.clearGameMessage();
+		
+
     	do {
         	discardCards = this.scanner.nextLine();
 
@@ -47,6 +63,15 @@ public class HumanPlayer extends PokerPlayer {
     }
     
     public boolean askFold(int currentBet) {
+
+    	try {
+			this.tweet.replyToTweet(this.game.getGameMessage(), this.game.getCurrentMessageId(), this.name);
+		} catch (TwitterException e) {
+    		// DO SOMETHING
+		}
+
+		this.game.clearGameMessage();
+
     	return this.getResponse();
     }
  
@@ -72,11 +97,9 @@ public class HumanPlayer extends PokerPlayer {
     			check = true;
     		
     	} while(!check);
-    	
-    	if(response == 1) 
-    		return true;
-    	else
-    		return false;
+
+		return response == 1;
     }
+
 
 }

@@ -101,37 +101,24 @@ public class PokerPlayer
 	}
 	
 	public boolean canOpenBet() {
-		if(hand.isHighHand())
-			return false;
-		else
-			return true;
+		return !hand.isHighHand();
 	}
 	
 	public boolean askFold(int currentBet) {
-		if(hand.isHighHand())
-			return true;
-		else
-			return false;
+		return hand.isHighHand();
 	}
 	
 	public boolean askOpenBet(int currentBet) {
-		if(hand.isHighHand())
-			return false;
-		else
-			return true;
+		return !hand.isHighHand();
 	}
 	
 	public boolean askRaiseBet(int currentBet) {
-		if(hand.isTwoPair() || hand.isOnePair() || hand.isHighHand())
-			return false;
-		else
-			return true;
+		return !(hand.isTwoPair() || hand.isOnePair() || hand.isHighHand());
 	}
 	
 	public int askDiscard() {
-		int discard = -1;
-		
-		return discard;
+
+		return -1;
 	}
 	
 	public void updateTableCoins(int coinsAmount) {
