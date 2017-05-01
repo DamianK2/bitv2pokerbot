@@ -36,12 +36,14 @@ public class GameOfPoker extends Thread {
 
 
         // MAIN GAME
-        boolean playAgain;
+        boolean playAgain = false;
         do {
 
             // Play one round
             RoundOfPoker round = new RoundOfPoker(players, deck, this.twitterInformation);
-            round.play();
+            if (round.play() == -1)
+                return;
+
 
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getCoinsBalance() == 0)
@@ -52,7 +54,13 @@ public class GameOfPoker extends Thread {
             this.resetGame(deck, players);
 
             twitterInformation.updateGameMessage("Would like to play another round of poker (y/n)");
-            playAgain = humanPlayer.getResponse();
+            int humanResponse = humanPlayer.getResponse();
+            if (humanResponse == PokerPlayer.TRUE)
+                playAgain = true;
+            else if (humanResponse == PokerPlayer.FALSE)
+                playAgain = false;
+            else if (humanResponse == PokerPlayer.EXIT_GAME)
+                return;
 
         } while (players.contains(humanPlayer) && playAgain);
 

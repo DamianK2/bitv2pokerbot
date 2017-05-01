@@ -40,5 +40,18 @@ public class TwitterInformation {
 
     public String getPlayerName() { return this.playerName; }
 
+    public static void main(String[] args) {
+        TwitterInformation ti = new TwitterInformation(1234L, "BitPlayer");
+
+        System.out.println(ti.getPlayerName().equals("BitPlayer"));
+        ti.updateGameMessage("Simple game message");
+        System.out.println(ti.getGameMessage().equals("Simple game message\n"));
+        System.out.println(ti.originalMessageId == 1234L);
+        ti.updateCurrentMessageId(3456L);
+        System.out.println(ti.getCurrentMessageId() == 3456L);
+        ti.clearGameMessage();
+        System.out.println(ti.getGameMessage().equals(""));
+    }
+
 
 }

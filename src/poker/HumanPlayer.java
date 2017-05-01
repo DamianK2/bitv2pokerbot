@@ -18,7 +18,7 @@ public class HumanPlayer extends PokerPlayer {
         this.name = name;
     }
 
-    public int askDiscard()
+    public synchronized int askDiscard()
     {
     	int counter = 0;
     	boolean check = false;
@@ -48,8 +48,7 @@ public class HumanPlayer extends PokerPlayer {
 				this.tweetMessage();
 				System.out.println("Game ended.");
 				
-				// TODO
-				System.exit(0);
+				return PokerPlayer.EXIT_GAME;
 			} 
 			else {
 				if (discardCards.equalsIgnoreCase("none")) {
@@ -87,30 +86,28 @@ public class HumanPlayer extends PokerPlayer {
         return counter;
     }
     
-    public boolean askFold(int currentBet) {
+    public int askFold(int currentBet) {
 
     	return this.getResponse();
     }
  
-    public boolean askOpenBet(int currentBet) {
+    public int askOpenBet(int currentBet) {
     	return this.getResponse();
 	}
     
-    public boolean askRaiseBet(int currentBet) {
+    public int askRaiseBet(int currentBet) {
     	return this.getResponse();
 	}
     
     // CHECK THE PLAYER BET AND RETURN IT
- 	public int betAmount() {
+ 	public synchronized int betAmount() {
          int num_betting = 0;
          boolean check = false;
          String bet = "";
 
          do {
-
+			 // Tweet message
         	 this.tweetMessage();
-
-             this.twitterInformation.clearGameMessage();
 
              // Wait until there is any response from user
              do {
@@ -130,8 +127,7 @@ public class HumanPlayer extends PokerPlayer {
  				this.tweetMessage();
 				System.out.println("Game ended.");
  				
-				// TODO
- 				System.exit(0);
+				return PokerPlayer.EXIT_GAME;
  			 }  
  			 else {
 	             if (!this.parser.bettingAmount(bet)) {
@@ -155,16 +151,14 @@ public class HumanPlayer extends PokerPlayer {
          return num_betting;
  	}
     
-    public boolean getResponse() {
+    public synchronized int getResponse() {
     	boolean check = false;
     	int response = -2;
 		String userResponse = "";
 
     	do {
-
+			// Tweet message
     		this.tweetMessage();
-
-			this.twitterInformation.clearGameMessage();
 
 			// Wait until there is any response from user
 			do {
@@ -184,8 +178,7 @@ public class HumanPlayer extends PokerPlayer {
 				this.tweetMessage();
 				System.out.println("Game ended.");
 				
-				// TODO
-				System.exit(0);
+				return PokerPlayer.EXIT_GAME;
 			} 
 			else {
 				response = this.parser.convertResponse(userResponse);
@@ -200,12 +193,12 @@ public class HumanPlayer extends PokerPlayer {
 		} while (!check);
     	
     	if (response == 1)
-    		return true;
+    		return PokerPlayer.TRUE;
     	else
-    		return false;
+    		return PokerPlayer.FALSE;
     }
     
-    public void tweetMessage() {
+    public synchronized void tweetMessage() {
         try {
             this.twitterInformation.updateCurrentMessageId(this.tweet.replyToTweet(this.twitterInformation.getGameMessage(), this.twitterInformation.getOriginalMessageId(), this.name));
         } catch (TwitterException e) {
