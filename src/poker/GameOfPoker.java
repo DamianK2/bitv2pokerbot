@@ -4,31 +4,24 @@ package poker;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GameOfPoker extends Thread {
+public class GameOfPoker {
 
     public final static int COMPUTER_PLAYERS = 4;
-    private TwitterInformation twitterInformation;
-
-    public GameOfPoker(long messageId, String name) {
-        this.twitterInformation = new TwitterInformation(messageId, name);
-    }
-
-    public void run() {
-        this.playPoker();
-    }
 
     public void playPoker() {
         DeckOfCards deck = new DeckOfCards();
         Parser parser = new Parser();
 
         Scanner input = new Scanner(System.in);
-        HumanPlayer humanPlayer = new HumanPlayer(deck, this.twitterInformation, twitterInformation.getPlayerName());
 
-        twitterInformation.updateGameMessage("Hello " + humanPlayer.getName() + " Let's play POKER ...");
+        System.out.println("Welcome to the Automated Poker Machine ...");
+        System.out.print("What is your name? ");
+        String name = input.nextLine();
+        System.out.println("Let's play POKER ...");
 
         // MAKE HUMAN PLAYER, PASS A NAME
-
-        ArrayList<PokerPlayer> players = new ArrayList<>();
+        HumanPlayer humanPlayer = new HumanPlayer(deck, name);
+        ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
         players.add(humanPlayer);
 
         for (int i = 0; i <= COMPUTER_PLAYERS; i++)
@@ -36,14 +29,12 @@ public class GameOfPoker extends Thread {
 
 
         // MAIN GAME
-        boolean playAgain = false;
+        boolean playAgain;
         do {
 
             // Play one round
-            RoundOfPoker round = new RoundOfPoker(players, deck, this.twitterInformation);
-            if (round.play() == -1)
-                return;
-
+            RoundOfPoker round = new RoundOfPoker(players, deck);
+            round.play();
 
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getCoinsBalance() == 0)
@@ -53,19 +44,12 @@ public class GameOfPoker extends Thread {
             // Reset the game, to make sure that players have fresh cards
             this.resetGame(deck, players);
 
-            twitterInformation.updateGameMessage("Would like to play another round of poker (y/n)");
-            int humanResponse = humanPlayer.getResponse();
-            if (humanResponse == PokerPlayer.TRUE)
-                playAgain = true;
-            else if (humanResponse == PokerPlayer.FALSE)
-                playAgain = false;
-            else if (humanResponse == PokerPlayer.EXIT_GAME)
-                return;
+            System.out.println("Would like to play another round of poker (y/n)");
+            playAgain = humanPlayer.getResponse();
 
         } while (players.contains(humanPlayer) && playAgain);
 
-        twitterInformation.updateGameMessage("The game is over! Thank you for playing with us.");
-        humanPlayer.tweetMessage();
+        System.out.println("The game is over!");
 
     }
 
@@ -80,7 +64,7 @@ public class GameOfPoker extends Thread {
     }
 
     public static void main(String[] args) {
-        GameOfPoker game = new GameOfPoker(854669882297901056L, "Marcin");
+        GameOfPoker game = new GameOfPoker();
         game.playPoker();
     }
 }
