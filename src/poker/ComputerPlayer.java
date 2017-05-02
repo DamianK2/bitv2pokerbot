@@ -29,7 +29,8 @@ public class ComputerPlayer extends PokerPlayer {
     
     private int generateRandomNumber(int range) {
     	Random rand = new Random();
-		return rand.nextInt(range);
+    	int number = rand.nextInt(range);
+    	return number;
     }
     
     public int discard()
@@ -92,140 +93,169 @@ public class ComputerPlayer extends PokerPlayer {
     	return probability;
     }
     
-    public boolean askFold(int currentBet) {
+    public int askFold(int currentBet) {
     	if(this.behaviourType == "safe"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
-				//After 2 rounds of seeing/raising decide to fold.
-				return currentBet <= 12 && currentBet >= 8;
+    			if(currentBet <= 12 && currentBet >= 8){		//After 2 rounds of seeing/raising decide to fold.
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
-				//After 1 round of seeing/raising decide to fold.
-				return currentBet <= 8 && currentBet >= 4;
+    			if(currentBet <= 8 && currentBet >= 4){		//After 1 round of seeing/raising decide to fold.
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     		else{			//If player has only a high hand, fold after one round.
-				return currentBet >= 5;
+    			if(currentBet < 5){
+    				return PokerPlayer.FALSE;
+    			}
+    			else return PokerPlayer.TRUE;
     		}
     	}
     	else if(this.behaviourType == "normal"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
-				//After 3 rounds of seeing/raising decide to fold.
-				return currentBet <= 16 && currentBet >= 12;
+    			if(currentBet <= 16 && currentBet >= 12){		//After 3 rounds of seeing/raising decide to fold.
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
-				//After 2 round of seeing/raising decide to fold.
-				return currentBet <= 12 && currentBet >= 8;
+    			if(currentBet <= 12 && currentBet >= 8){		//After 2 round of seeing/raising decide to fold.
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     		else{			//If player has only a high hand, fold after 1 round.
-				return currentBet >= 5;
+    			if(currentBet < 5){
+    				return PokerPlayer.FALSE;
+    			}
+    			else return PokerPlayer.TRUE;
     		}
     	}
     	else if(this.behaviourType == "risky"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
-				return this.coins <= currentBet / 4;
+    			if(this.coins > currentBet/4){		//Risky player has a good hand, he won't fold unless he has no coins.
+    				return PokerPlayer.FALSE;
+    			}
+    			else return PokerPlayer.TRUE;
     			}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
-				//After 3 rounds of seeing/raising decide to fold.
-				return currentBet <= 16 && currentBet >= 12;
+    			if(currentBet <= 16 && currentBet >= 12){		//After 3 rounds of seeing/raising decide to fold.
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     		else{			//If player has only a high hand, fold after two rounds.
-				//After 2 round of seeing/raising decide to fold.
-				return currentBet <= 12 && currentBet >= 8;
+    			if(currentBet <= 12 && currentBet >= 8){		//After 2 round of seeing/raising decide to fold.
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     	}
-    	return true;
+    	return PokerPlayer.TRUE;
     }
  
-    public boolean askOpenBet(int currentBet) {
-    	if(this.behaviourType == "safe") {
-			//Even when playing safe with a good had player will be willing to open
-			return this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0 || this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0;
-//Even when playing safe with a good had player will be willing to open
-//If player has only a high hand, don't open.
-		}
-    	else if(this.behaviourType == "normal"){
+    public int askOpenBet(int currentBet) {
+    	if(this.behaviourType == "safe"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
-    			return true;
+    			return PokerPlayer.TRUE;	//Even when playing safe with a good had player will be willing to open
     		}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
-    			return true;
+    			return PokerPlayer.TRUE;	//Even when playing safe with a good had player will be willing to open
+    		}
+    		else{			//If player has only a high hand, don't open.
+    			return PokerPlayer.FALSE;
+    		}
+    	}
+    	else if(this.behaviourType == "normal"){
+    		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
+    			return PokerPlayer.TRUE;
+    		}
+    		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
+    			return PokerPlayer.TRUE;
     		}
     		else{			//open once every two times of only high hand available.
     			Random rand = new Random(); 
     			int x = rand.nextInt(2);
-				return x == 0;
+    			if(x == 0){
+    				return PokerPlayer.TRUE;
+    			}
+    			else return PokerPlayer.FALSE;
     		}
     	}
     	else if(this.behaviourType == "risky"){		//always open
-    		return true;
+    		return PokerPlayer.TRUE;
     	}
-    	return true;
+    	return PokerPlayer.TRUE;
 	}
     
-    public boolean askRaiseBet(int currentBet) {
+    public int askRaiseBet(int currentBet) {
     	int noOfRaises = 0;
     	if(this.behaviourType == "safe"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
     			if(noOfRaises >= 2){
-    				return false;
+    				return PokerPlayer.FALSE;
     			}
     				else{
     					noOfRaises++;
-    					return true;    			
+    					return PokerPlayer.TRUE;    			
     				}
     		}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
     			if(noOfRaises >= 1){
-    				return false;
+    				return PokerPlayer.FALSE;
     			}
     			else {
     				noOfRaises++;
-    				return true;
+    				return PokerPlayer.TRUE;
     			}
     		}
     		else{			//If player has only a high hand, don't raise.
-    			return false;
+    			return PokerPlayer.FALSE;
     		}
     	}
     	else if(this.behaviourType == "normal"){
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
     			if(noOfRaises >= 3){
-    				return false;
+    				return PokerPlayer.FALSE;
     			}
     			else {
     				noOfRaises++;
-    				return true;
+    				return PokerPlayer.TRUE;
     			}
     		}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
     			if(noOfRaises >= 2){
-    				return false;
+    				return PokerPlayer.FALSE;
     			}
     			else {
     				noOfRaises++;
-    				return true;
+    				return PokerPlayer.TRUE;
     			}
     		}
     		else{			//if only high hand do not raise.
-    			return false;
+    			return PokerPlayer.FALSE;
     		}
     	}
     	else if(this.behaviourType == "risky"){		
     		if(this.hand.getGameValue() <= HandOfCards.ROYAL_FLUSH_DEFAULT && this.hand.getGameValue() >= HandOfCards.STRAIGHT_DEFAULT && this.coins != 0){
     			if(noOfRaises >= 4){
-    				return false;
+    				return PokerPlayer.FALSE;
     			}
     			else {
     				noOfRaises++;
-    				return true;
+    				return PokerPlayer.TRUE;
     			}
     		}
     		else if(this.hand.getGameValue() <= HandOfCards.THREE_OF_KIND_DEFAULT && this.hand.getGameValue() >= HandOfCards.ONE_PAIR_DEFAULT && this.coins != 0){
     			if(noOfRaises >= 3){
-    				return false;
+    				return PokerPlayer.FALSE;
     			}
     			else {
     				noOfRaises++;
-    				return true;
+    				return PokerPlayer.TRUE;
     			}
     		}
     		else{			//raise once every two times of only high hand available(extreme bluff).
@@ -233,13 +263,13 @@ public class ComputerPlayer extends PokerPlayer {
     			int x = rand.nextInt(2);
     			if(x == 0){
     				noOfRaises++;
-    				return true;
+    				return PokerPlayer.TRUE;
     			}
-    			else return false;
+    			else return PokerPlayer.FALSE;
     		}
 	}
     	noOfRaises++;
-    	return true;
+    	return PokerPlayer.TRUE;
 	}
 
     public static void main(String[] args) {
