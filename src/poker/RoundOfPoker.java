@@ -7,61 +7,56 @@ public class RoundOfPoker {
 
     private int currentBet;
     private ArrayList<PokerPlayer> players;
-    private TwitterInformation twitterInformation;
 
-    public RoundOfPoker(ArrayList<PokerPlayer> players, DeckOfCards deck, TwitterInformation twitterInformation)
+    public RoundOfPoker(ArrayList<PokerPlayer> players, DeckOfCards deck)
     {
         this.players = players;
         this.currentBet = 0;
-        this.twitterInformation = twitterInformation;
     }
 
-    public int play()
+    public void play(GameOfPoker game)
     {
 
-        int responseStatus = 0;
         // START ROUND
-        this.twitterInformation.updateGameMessage("New Deal:");
+        game.updateGameMessage("New Deal:");
 
         for (PokerPlayer player : this.players)
-            this.twitterInformation.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " chips");
+            game.updateGameMessage("> " + player.getName() + " has " + player.getCoinsBalance() + " coins in the bank");
 
         // CHECK IF ANY PLAYER CAN OPEN
         boolean canOpen = false;
         for (PokerPlayer player : this.players)
             if (player.canOpenBet()) {
-                this.twitterInformation.updateGameMessage("> " + player.getName() + " can open");
+                game.updateGameMessage("> " + player.getName() + " says: I can open");
                 canOpen = true;
             }
             else
-                this.twitterInformation.updateGameMessage("> " + player.getName() + " can't open");
+                game.updateGameMessage("> " + player.getName() + " says: I cannot open");
 
         if (!canOpen) {
-            this.twitterInformation.updateGameMessage("> Sorry, we cannot open the game.");
-            return PokerPlayer.TRUE;
+            game.updateGameMessage("Sorry, we cannot open the game.");
+            return;
         }
 
-        this.twitterInformation.updateGameMessage("> You have been dealt the following hand:");
+        game.updateGameMessage("You have been dealt the following hand:");
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
         for (PokerPlayer player : this.players)
             if (player.isHuman())
-                this.twitterInformation.updateGameMessage(player.getHand());
+                game.updateGameMessage(player.getHand());
 
         // DISCARD
         for (PokerPlayer player : this.players) {
             if (player.isHuman()) {
-                this.twitterInformation.updateGameMessage("> Which card(s) would you like to discard (e.g. 1,3 or 1 3 or none): ");
-                // CHECK IF PLAYER WANTS TO EXIT THE GAME
-                if(player.askDiscard() == PokerPlayer.EXIT_GAME)
-                	return PokerPlayer.EXIT_GAME;
+                game.updateGameMessage(">> Which card(s) would you like to discard (e.g., 1,3): ");
+                player.askDiscard();
             }
         }
 
         // PRINT THE TYPE OF HAND THAT HUMAN PLAYER OWNS
         for (PokerPlayer player : this.players)
             if (player.isHuman()) {
-                this.twitterInformation.updateGameMessage("> Your hand now looks like:");
-                this.twitterInformation.updateGameMessage(player.getHand());
+                game.updateGameMessage("Your hand now looks like:");
+                game.updateGameMessage(player.getHand());
             }
 
         // ASK TO FOLD
@@ -70,36 +65,28 @@ public class RoundOfPoker {
         for (int i = 0; i < players.size(); i++) {
 
             if (players.get(i).isHuman()) {
-                this.twitterInformation.updateGameMessage("> Would you like to fold (y/n)? ");
+                game.updateGameMessage(">> Would you like to fold (y/n)? ");
             }
-            // CHECK IF PLAYER WANTS TO EXIT THE GAME
-            responseStatus = players.get(i).askFold(this.currentBet);
-            if (responseStatus == PokerPlayer.TRUE)
-            	fold[i] = true;
-            else if (responseStatus == PokerPlayer.FALSE)
-            	fold[i] = false;
-            else if (responseStatus == PokerPlayer.EXIT_GAME)
-            	return PokerPlayer.EXIT_GAME;
-            
+            fold[i] = players.get(i).askFold(this.currentBet);
             if(!fold[i])
                 allFold = true;
         }
         // SHOW DISCARDING STATS
         for (PokerPlayer player : this.players)
             if (!player.isHuman())
-                this.twitterInformation.updateGameMessage("> " + player.getName() + " discards " + player.discard() + " card(s)");
+                System.out.println(player.getName() + " discards " + player.discard() + " card(s)");
 
         System.out.println("");
 
         // IF EVERY PLAYER FOLD THEN EXIT ROUND OF POKER
         if (!allFold) {
-            this.twitterInformation.updateGameMessage("> Sorry, all players fold in the round.");
-            return PokerPlayer.TRUE;
+            System.out.println("sorry, all players fold in the round.");
+            return;
         }
 
 
         // BETTING
-        int checkOpen = 0, roundCounter = 0, currentPot = 0, previousPlayer = 0, raise = 0;
+        int checkOpen = 0, roundCounter = 0, currentPot = 0;
         boolean round = true, openingBetting = true, human = true, firstOpen = false;
 
         while (round) {
@@ -112,19 +99,10 @@ public class RoundOfPoker {
                         if(players.get(i).isHuman()){
                             // CHECK IF THE HUMAN PLAYER IS THE FIRST PLAYER TO OPEN
                             if (players.get(i).canOpenBet() && !fold[i] && human && checkOpen == 0) {
-                                this.twitterInformation.updateGameMessage("> Would you like to open bet (y/n)? ");
-                                // CHECK IF PLAYER WANTS TO EXIT THE GAME
-                                responseStatus = players.get(i).askOpenBet(this.currentBet);
-                                if (responseStatus == PokerPlayer.TRUE)
-                                	firstOpen = true;
-                                else if (responseStatus == PokerPlayer.FALSE)
-                                	firstOpen = false;
-                                else if (responseStatus == PokerPlayer.EXIT_GAME)
-                                	return PokerPlayer.EXIT_GAME;
-                               
+                                System.out.println("Would you like to open bet (y/n)? ");
+                               firstOpen = players.get(i).askOpenBet(this.currentBet);
                                if(firstOpen){
-                                   this.currentBet = roundBetting(i, previousPlayer);
-                                   previousPlayer = i;
+                                   this.currentBet = 1;
                                    players.get(i).updateCoinsBalance(-this.currentBet);
                                    players.get(i).updateTableCoins(this.currentBet);
                                    currentPot += this.currentBet;
@@ -134,15 +112,7 @@ public class RoundOfPoker {
                         }
                         // CHECK IF THE COMPUTER PLAYER IS THE FIRST PLAYER TO OPEN
                         else if(players.get(i).canOpenBet() && !players.get(i).isHuman()){
-                        	// CHECK IF PLAYER WANTS TO EXIT THE GAME
-                            responseStatus = players.get(i).askOpenBet(this.currentBet);
-                        	if (responseStatus == PokerPlayer.TRUE)
-                            	firstOpen = true;
-                            else if (responseStatus == PokerPlayer.FALSE)
-                            	firstOpen = false;
-                            else if (responseStatus == PokerPlayer.EXIT_GAME)
-                            	return PokerPlayer.EXIT_GAME;
-                        	
+                            firstOpen = players.get(i).askOpenBet(this.currentBet);
                             if(firstOpen){
                                 this.currentBet = 1;
                                 players.get(i).updateCoinsBalance(-this.currentBet);
@@ -153,7 +123,7 @@ public class RoundOfPoker {
 
                     // CHECK IF THIS IS THE FIRST TIME OF OPENING AND PRINT THE OPENING STATEMENT
                     if (checkOpen == 0 && firstOpen) {
-                        this.twitterInformation.updateGameMessage("> " + players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
+                        System.out.println(players.get(i).getName() + " says: I open with " + this.currentBet + " chip!");
                         currentPot += this.currentBet;
                         checkOpen = 1;
                     }
@@ -167,75 +137,53 @@ public class RoundOfPoker {
 
                             printSeenStatement(currentPot, i);
 
-                            if(raise == 0)
-                                this.twitterInformation.updateGameMessage("> Would you like to raise (y/n)? ");
-                            else
-                                this.twitterInformation.updateGameMessage("> Would you like to raise again (y/n)? ");
-                            
-                            boolean checkHuman = false;
-                            // CHECK IF PLAYER WANTS TO EXIT THE GAME
-                            responseStatus = players.get(i).askRaiseBet(this.currentBet);
-                            if (responseStatus == PokerPlayer.TRUE)
-                            	checkHuman = true;
-                            else if (responseStatus == PokerPlayer.FALSE)
-                            	checkHuman = false;
-                            else if (responseStatus == PokerPlayer.EXIT_GAME)
-                            	return PokerPlayer.EXIT_GAME;
-                             
+                            System.out.println("Would you like to raise (y/n)? ");
+                            boolean checkHuman = players.get(i).askRaiseBet(this.currentBet);
+
                             // IF THE PLAYER SAID YES THEN RAISE BET
                             if (checkHuman) {
-                                if(raise == 0)
-                                    this.twitterInformation.updateGameMessage("> How much would you like to raise the bet? ");
+                                if(players.get(i).getCoinsBalance() > 0) {
+                                    players.get(i).updateCoinsBalance(-this.currentBet);
+                                    players.get(i).updateTableCoins(this.currentBet);
+                                    printRaiseStatement(i, this.currentBet);
+                                    currentPot += this.currentBet;
+                                }
                                 else
-                                    this.twitterInformation.updateGameMessage("> How much would you like to raise the bet again? ");
-                                raise = 1;
-
-                                this.currentBet = roundBetting(i, previousPlayer);
-                                previousPlayer = i;
-                                players.get(i).updateCoinsBalance(-this.currentBet);
-                                players.get(i).updateTableCoins(this.currentBet);
-                                printRaiseStatement(i, this.currentBet);
-                                currentPot += this.currentBet;
+                                    fold[i] = true;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkHuman ) {
                                //System.out.println("Would you like to fold (y/n)? ");
                                 fold[i] = true;
-                                this.twitterInformation.updateGameMessage("> " + players.get(i).getName() + " says: I fold ");
+                                System.out.println(players.get(i).getName() + " says: I fold ");
                             }
                         }
                         // CHECK IF THE PLAYER IS A COMPUTER PLAYER AND ASK THE PLAYER TO RAISE THE BET
                         else {
-                            boolean checkComputer = false;
-                            // CHECK IF PLAYER WANTS TO EXIT THE GAME
-                            responseStatus = players.get(i).askRaiseBet(this.currentBet);
-                            if (responseStatus == PokerPlayer.TRUE)
-                            	checkComputer = true;
-                            else if (responseStatus == PokerPlayer.FALSE)
-                            	checkComputer = false;
-                            else if (responseStatus == PokerPlayer.EXIT_GAME)
-                            	return PokerPlayer.EXIT_GAME;
-                            
+                            boolean checkComputer = players.get(i).askRaiseBet(this.currentBet);
                             // IF THE PLAYER COIN BALANCE IS ZERO REMOVE THE PLAYER FROM THE GAME
                             if(checkActive(fold) == 1)
                                 break;
-                            
 
                             // IF THE PLAYER SAID YES THEN RAISE BET
-                            if (checkComputer ) {
-                                players.get(i).updateCoinsBalance(-this.currentBet);
-                                players.get(i).updateTableCoins(this.currentBet);
-                                if(checkActive(fold) == 1)
-                                    break;
+                            if (checkComputer && !fold[i] ) {
+                                if(players.get(i).getCoinsBalance() > 0) {
+                                    players.get(i).updateCoinsBalance(-this.currentBet);
+                                    players.get(i).updateTableCoins(this.currentBet);
+                                    if (checkActive(fold) == 1)
+                                        break;
 
-                                printSeenStatement(currentPot, i);
-                                printRaiseStatement(i, this.currentBet);
-                                currentPot += this.currentBet;
+                                    printSeenStatement(currentPot, i);
+                                    printRaiseStatement(i, this.currentBet);
+                                    currentPot += this.currentBet;
+                                }
+                                else
+                                    fold[i] = true;
                             }
                             // CHECK IF THE PLAYER DIDN'T RAISE THE BET AND THE BETTING ISN'T THE OPENING BET THEN FOLD
                             else if (!checkComputer) {
                                 fold[i] = true;
-                                this.twitterInformation.updateGameMessage("> " + players.get(i).getName() + " says: I  fold ");
+                                System.out.println(players.get(i).getName() + " says: I  fold ");
                             }
                         }
                     }
@@ -263,52 +211,50 @@ public class RoundOfPoker {
             }
 
         }
-        
-        return PokerPlayer.TRUE;
+
     }
 
     // A METHOD THAT CHECKS WHICH PLAYER IS THE WINNER AND DISPLAY PLAYERS HAND
-    public void winner(boolean fold[], int currentPot) {
+    public void winner(boolean fold[], int currentPot){
         // CHECK FOR WINNER
-        int winnings = currentPot;
         int winnerPos = 0, cardGameValue = 0;
-        for (int i = 0; i < players.size(); i++) {
-            if (i ==  0 ) {
+        for(int i = 0; i < players.size(); i++){
+            if(i ==  0 ) {
                // players.get(i).updateTableCoins(-this.currentBet);
-                this.twitterInformation.updateGameMessage(players.get(i).getName() + " goes first");
-                this.twitterInformation.updateGameMessage(players.get(i).getHand());
-                if (players.get(i).getHandValue() > cardGameValue && !fold[i]) {
+                System.out.println(players.get(i).getName() + " goes first");
+                System.out.println(players.get(i).getHand());
+                if(players.get(i).getHandValue() > cardGameValue && !fold[i]) {
                     cardGameValue = players.get(i).getHandValue();
                     winnerPos = i;
                 }
             }
-            else {
+            else{
                 if(players.get(i).getHandValue() > cardGameValue && !fold[i]){
                    // players.get(i).updateTableCoins(-this.currentBet);
-                    this.twitterInformation.updateGameMessage(players.get(i).getName() + " says 'read them and weep'");
-                    this.twitterInformation.updateGameMessage(players.get(i).getHand());
+                    System.out.println(players.get(i).getName() + " says 'read them and weep'");
+                    System.out.println(players.get(i).getHand());
                     cardGameValue = players.get(i).getHandValue();
                     winnerPos = i;
                 }
                 else{
                     //players.get(i).updateTableCoins(-this.currentBet);
-                    this.twitterInformation.updateGameMessage(players.get(i).getName() + " says 'read them and weep'");
-                    this.twitterInformation.updateGameMessage(players.get(i).getHand());
+                    System.out.println(players.get(i).getName() + " says 'read them and weep'");
+                    System.out.println(players.get(i).getHand());
                 }
 
             }
         }
 
         // PRINT WINNER
-        if(winnings > 0) {
-            players.get(winnerPos).updateCoinsBalance(winnings);
-            this.twitterInformation.updateGameMessage(players.get(winnerPos).getName() + " say: I WIN  " + winnings + " chip");
-            this.twitterInformation.updateGameMessage(players.get(winnerPos).getHand());
-            this.twitterInformation.updateGameMessage(players.get(winnerPos).getName() + " has " +
+        if(currentPot > 0) {
+            players.get(winnerPos).updateCoinsBalance(currentPot);
+            System.out.println(players.get(winnerPos).getName() + " say: I WIN  " + currentPot + " chip");
+            System.out.println(players.get(winnerPos).getHand());
+            System.out.println(players.get(winnerPos).getName() + " has " +
                     players.get(winnerPos).getCoinsBalance()  + " chip(s) in the bank");
         }
         else
-            this.twitterInformation.updateGameMessage("No winner because none of the players can open the bet");
+            System.out.println("No winner because none of the players can open the bet");
 
     }
 
@@ -321,12 +267,12 @@ public class RoundOfPoker {
 
     // A METHOD THAT PRINT SEE STATEMENT IN THE GAME
     public void printSeenStatement(int currentPot, int i){
-        this.twitterInformation.updateGameMessage("> " + players.get(i).getName() + " says: I see that " + currentPot + " chip!");
+        System.out.println(players.get(i).getName() + " says: I see that, " + currentPot + " chip!");
     }
 
     // A METHOD THAT PRINT THE RAISE STATEMENT IN THE GAME
     public void printRaiseStatement(int i, int current){
-        this.twitterInformation.updateGameMessage("> " + players.get(i).getName() + " says: I raise " + current + " chip!");
+        System.out.println(players.get(i).getName() + " says: I raise " + current + " chip!");
     }
 
     // CHECK THE NUMBER OF PLAYER STILL IN THE GAME
@@ -340,39 +286,27 @@ public class RoundOfPoker {
         return  checkActivePlayer;
     }
 
-    // HUMAN OPENING AND BETTING AMOUNT OF CHIP
-    public int  roundBetting(int currentPlayer, int previousPlayer){
-        int bet = 0;
-        if(players.get(currentPlayer).getCoinsBalance() > 0) {
-            bet = players.get(currentPlayer).betAmount();
-            while (players.get(currentPlayer).updatePlayerPot() + bet < players.get(previousPlayer).updatePlayerPot()) {
-                bet = players.get(currentPlayer).betAmount();
-            }
-        }
-        return bet;
-    }
-
 
     public static void main(String[] args) {
-       /* DeckOfCards deck = new DeckOfCards();
+       DeckOfCards deck = new DeckOfCards();
 
         Scanner input = new Scanner(System.in);
 
 
 
         System.out.println("Welcome to the Automated Poker Machine ...");
-        System.out.print("What is your name? ");
-        String name = input.nextLine();
+       // System.out.print("What is your name? ");
+        //String name = input.nextLine();
         System.out.println("Let's play POKER ...");
 
         // MAKE HUMAN PLAYER, PASS A NAME
-        HumanPlayer humanPlayer = new HumanPlayer(deck);
+        //HumanPlayer humanPlayer = new HumanPlayer(deck);
         ComputerPlayer p1 = new ComputerPlayer(deck);
         ComputerPlayer p2 = new ComputerPlayer(deck);
         ComputerPlayer p3 = new ComputerPlayer(deck);
         ComputerPlayer p4 = new ComputerPlayer(deck);
         ArrayList<PokerPlayer> players = new ArrayList<PokerPlayer>();
-        players.add(humanPlayer);
+       // players.add(humanPlayer);
         players.add(p1);
         players.add(p2);
         players.add(p3);
@@ -381,7 +315,7 @@ public class RoundOfPoker {
         RoundOfPoker round = new RoundOfPoker(players, deck);
 
         boolean poker = true;
-        while(poker && players.contains(humanPlayer)){
+        while(poker /**&& players.contains(humanPlayer)*/){
             round.play();
             System.out.println("Would like to play another round of poker (y/n)");
             Scanner in = new Scanner(System.in);
@@ -397,7 +331,7 @@ public class RoundOfPoker {
 
             if(response.equalsIgnoreCase("n"))
                 poker = false;
-        }*/
+        }
 
         //System.out.println(round.players.get(0).name);
 
